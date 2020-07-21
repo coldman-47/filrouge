@@ -26,11 +26,11 @@ class UserFixtures extends Fixture
                 'thapass'
             )
         );
-        $manager->persist($user);
         $user->setPrenom('Ibrahima');
         $user->setNom('GUEYE');
         $user->setEmail('ibou@odc.sn');
 
-        $manager->flush();
+        $manager->persist($user);
+        //$manager->flush();
     }
 }
