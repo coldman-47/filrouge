@@ -11,7 +11,7 @@ class ProfilFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         $profil = new Profil();
-        $profil->setLibelle('Prof');
+        $profil->setLibelle('SECRETAIRE');
         $manager->persist($profil);
 
         //$manager->flush();
