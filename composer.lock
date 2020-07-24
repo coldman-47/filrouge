@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "97247b82e88b5fdd32e5cd370f89382b",
+    "content-hash": "7f6d03302edda5416a54356e373956c7",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1597,6 +1597,56 @@
             "time": "2020-04-27T06:40:36+00:00"
         },
         {
+            "name": "fzaninotto/faker",
+            "version": "v1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fzaninotto/Faker.git",
+                "reference": "fc10d778e4b84d5bd315dad194661e091d307c6f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/fc10d778e4b84d5bd315dad194661e091d307c6f",
+                "reference": "fc10d778e4b84d5bd315dad194661e091d307c6f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.3.3 || ^7.0"
+            },
+            "require-dev": {
+                "ext-intl": "*",
+                "phpunit/phpunit": "^4.8.35 || ^5.7",
+                "squizlabs/php_codesniffer": "^2.9.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "time": "2019-12-12T13:22:17+00:00"
+        },
+        {
             "name": "laminas/laminas-code",
             "version": "3.4.1",
             "source": {
@@ -2005,16 +2055,16 @@
         },
         {
             "name": "nelmio/cors-bundle",
-            "version": "2.0.1",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioCorsBundle.git",
-                "reference": "9683e6d30d000ef998919261329d825de7c53499"
+                "reference": "be4d5824caebc86da9e224e935e02e1201b3ea54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioCorsBundle/zipball/9683e6d30d000ef998919261329d825de7c53499",
-                "reference": "9683e6d30d000ef998919261329d825de7c53499",
+                "url": "https://api.github.com/repos/nelmio/NelmioCorsBundle/zipball/be4d5824caebc86da9e224e935e02e1201b3ea54",
+                "reference": "be4d5824caebc86da9e224e935e02e1201b3ea54",
                 "shasum": ""
             },
             "require": {
@@ -2058,7 +2108,7 @@
                 "cors",
                 "crossdomain"
             ],
-            "time": "2019-11-15T08:54:08+00:00"
+            "time": "2020-07-22T11:44:28+00:00"
         },
         {
             "name": "nikic/php-parser",
