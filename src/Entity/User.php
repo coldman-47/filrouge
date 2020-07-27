@@ -2,20 +2,48 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Repository\UserRepository;
+use Vich\UploaderBundle\Entity\File;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @Vich\Uploadable
  * @ApiResource(
+ *  normalizationContext={
+ *      "groups"={
+ *          "profil:read"
+ *      }
+ *  },
+ *  attributes = {
+ *      "security" = "is_granted('ROLE_ADMIN')",
+ *      "security_message" = "Accès refusé!"
+ *  },
  *  collectionOperations = {
- *      "get","post"
+ *      "get" = {
+ *          "path" = "/admin/users/",
+ *      },
+ *      "post" = {
+ *          "path" = "/admin/users/",
+ *          "deserialize"= false,
+ *          "controller"=UserController::class,
+ *          
+ *      },
  *  },
  *  itemOperations = {
- *      "get"
+ *      "get" = {
+ *          "path" = "/admin/users/{id}/",
+ *      },
+ *      "put" = {
+ *          "path" = "/admin/users/{id}/",
+ *      }
  *  }
  * )
  */
@@ -25,6 +53,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"profil:read"})
      */
     private $id;
 
@@ -33,7 +62,7 @@ class User implements UserInterface
      */
     private $username;
 
-    
+
     private $roles = [];
 
     /**
@@ -45,28 +74,40 @@ class User implements UserInterface
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"profil:read"})
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"profil:read"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"profil:read"})
      */
     private $email;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="string")
+     * @Groups({"profil:read"})
+     * @var string|null
+     */
+    private $avatarType;
+
+    /**
+     * @ORM\Column(type="blob")
+     * @Groups({"profil:read"})
      */
     private $avatar;
 
     /**
      * @ORM\ManyToOne(targetEntity=Profil::class, inversedBy="users")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"profil:read"})
      */
     private $profil;
 
@@ -99,7 +140,7 @@ class User implements UserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_'.$this->profil->getLibelle();
+        $roles[] = 'ROLE_' . $this->profil->getLibelle();
 
         return array_unique($roles);
     }
@@ -179,12 +220,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatar()
     {
         return $this->avatar;
     }
 
-    public function setAvatar(?string $avatar): self
+    public function setAvatar($avatar): self
     {
         $this->avatar = $avatar;
 
@@ -199,6 +240,30 @@ class User implements UserInterface
     public function setProfil(?Profil $profil): self
     {
         $this->profil = $profil;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of avatarType
+     *
+     * @return  string|null
+     */
+    public function getAvatarType()
+    {
+        return $this->avatarType;
+    }
+
+    /**
+     * Set the value of avatarType
+     *
+     * @param  string|null  $avatarType
+     *
+     * @return  self
+     */
+    public function setAvatarType($avatarType)
+    {
+        $this->avatarType = $avatarType;
 
         return $this;
     }
