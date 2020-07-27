@@ -222,7 +222,7 @@ class User implements UserInterface
 
     public function getAvatar()
     {
-        return $this->avatar;
+        return base64_encode(stream_get_contents($this->avatar));
     }
 
     public function setAvatar($avatar): self

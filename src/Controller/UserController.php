@@ -38,26 +38,9 @@ class UserController extends AbstractController
 
         $manager->persist($user);
         $manager->flush();
-
-        // $photo = stream_get_contents($image);
-        // $avatar = base64_encode($photo);
         // echo "<img src='data:$type;base64,$avatar'>";
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
-    }
-
-    /**
-     * @Route(path="/api/admin/users/", name="getusers", methods = {"GET"})
-     */
-    public function getUsers(SerializerInterface $serializer, EntityManagerInterface $manager)
-    {
-        $users = $manager->getRepository(User::class)->findAll();
-        foreach ($users as $user) {
-            $user->setAvatar(base64_encode(stream_get_contents($user->getAvatar())));
-        }
-        $usersJson = $serializer->normalize($users, "json");
-        $user = $usersJson[9];
-        return new JsonResponse($usersJson);
     }
 
     public function index()
