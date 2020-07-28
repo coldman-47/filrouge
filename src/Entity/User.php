@@ -6,16 +6,18 @@ use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Vich\UploaderBundle\Entity\File;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @Vich\Uploadable
  * @ApiResource(
  *  normalizationContext={
  *      "groups"={
@@ -30,11 +32,9 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  *      "get" = {
  *          "path" = "/admin/users/",
  *      },
- *      "post" = {
- *          "path" = "/admin/users/",
- *          "deserialize"= false,
- *          "controller"=UserController::class,
- *          
+ *      "post_user" = {
+ *          "method" = "post",
+ *          "path" = "/admin/users/"
  *      },
  *  },
  *  itemOperations = {
@@ -92,14 +92,14 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Groups({"profil:read"})
      * @var string|null
      */
     private $avatarType;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="blob", nullable=true)
      * @Groups({"profil:read"})
      */
     private $avatar;
@@ -110,6 +110,38 @@ class User implements UserInterface
      * @Groups({"profil:read"})
      */
     private $profil;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $genre;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $adresse;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $statut;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $telephone;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=ProfilSortie::class, mappedBy="ProfilApprenant")
+     * @ApiSubresource()
+     * @Groups({"profil:read"})
+     */
+    private $profilSorties;
+
+    public function __construct()
+    {
+        $this->profilSorties = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -222,6 +254,9 @@ class User implements UserInterface
 
     public function getAvatar()
     {
+        if (empty($this->avatar)) {
+            return null;
+        }
         return base64_encode(stream_get_contents($this->avatar));
     }
 
@@ -264,6 +299,82 @@ class User implements UserInterface
     public function setAvatarType($avatarType)
     {
         $this->avatarType = $avatarType;
+
+        return $this;
+    }
+
+    public function getGenre(): ?string
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(string $genre): self
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getAdresse(): ?string
+    {
+        return $this->adresse;
+    }
+
+    public function setAdresse(?string $adresse): self
+    {
+        $this->adresse = $adresse;
+
+        return $this;
+    }
+
+    public function getStatut(): ?string
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?string $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): self
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ProfilSortie[]
+     */
+    public function getProfilSorties(): Collection
+    {
+        return $this->profilSorties;
+    }
+
+    public function addProfilSorty(ProfilSortie $profilSorty): self
+    {
+        if (!$this->profilSorties->contains($profilSorty)) {
+            $this->profilSorties[] = $profilSorty;
+            $profilSorty->addProfilApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProfilSorty(ProfilSortie $profilSorty): self
+    {
+        if ($this->profilSorties->contains($profilSorty)) {
+            $this->profilSorties->removeElement($profilSorty);
+            $profilSorty->removeProfilApprenant($this);
+        }
 
         return $this;
     }

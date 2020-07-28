@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route(path="/api/admin/users/", name="user", methods = {"POST"})
+     * @Route(path="/api/admin/users/", name="post_user", methods = {"POST"})
      */
     public function addUser(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder, SerializerInterface $serializer)
     {
