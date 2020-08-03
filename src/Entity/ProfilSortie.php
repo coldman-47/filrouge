@@ -15,7 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ApiResource(
  *  normalizationContext={
  *      "groups"={
- *          "profil:read"
+ *          "profil_sortie"
  *      }
  *  }
  * )
@@ -26,22 +26,20 @@ class ProfilSortie
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @ApiSubresource()
-     * @Groups({"profil:read"})
+     * @Groups({"profil_sortie"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @ApiSubresource()
-     * @Groups({"profil:read"})
+     * @Groups({"profil_sortie", "profil:read"})
      */
     private $libelle;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="profilSorties")
+     * @Groups({"profil_sortie"})
      * @ApiSubresource()
-     * @Groups({"profil:read"})
      */
     private $ProfilApprenant;
 

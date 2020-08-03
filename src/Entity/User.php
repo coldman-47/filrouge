@@ -5,20 +5,20 @@ namespace App\Entity;
 use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
-use Vich\UploaderBundle\Entity\File;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ApiResource(
+ *  attributes = {
+ *      "enable_max_depth"=true
+ *  },
  *  normalizationContext={
  *      "groups"={
  *          "profil:read"
@@ -34,8 +34,13 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  *      },
  *      "post_user" = {
  *          "method" = "post",
- *          "path" = "/admin/users/"
+ *          "path" = "/admin/users/",
  *      },
+ *      "apprenant_list",
+ *      "add_apprenant" = {
+ *          "method" = "post",
+ *          "deserialize" = false
+ *      }
  *  },
  *  itemOperations = {
  *      "get" = {
@@ -43,6 +48,11 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  *      },
  *      "put" = {
  *          "path" = "/admin/users/{id}/",
+ *      },
+ *      "get_apprenant",
+ *      "update_apprenant" = {
+ *          "method" = "put",
+ *          "deserialize" = false
  *      }
  *  }
  * )
@@ -59,6 +69,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups({"profil_sortie"})
      */
     private $username;
 
@@ -93,14 +104,12 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Groups({"profil:read"})
      * @var string|null
      */
     private $avatarType;
 
     /**
      * @ORM\Column(type="blob", nullable=true)
-     * @Groups({"profil:read"})
      */
     private $avatar;
 
@@ -133,7 +142,6 @@ class User implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=ProfilSortie::class, mappedBy="ProfilApprenant")
-     * @ApiSubresource()
      * @Groups({"profil:read"})
      */
     private $profilSorties;
