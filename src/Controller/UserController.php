@@ -20,6 +20,31 @@ class UserController extends AbstractController
     /**
      * @Route(path="/api/admin/users/", name="post_user", methods = {"POST"})
      */
+
+    // private $serializer, $encoder, $request;
+    // public function __construct(SerializerInterface $serializer, UserPasswordEncoderInterface $encoder, Request $request)
+    // {
+    //     $this->serializer = $serializer;
+    //     $this->encoder = $encoder;
+    //     $this->request = $request;
+    // }
+
+    // function handler($nUser)
+    // {
+    //     $uploadedFile = $this->request->files->get('avatarFile');
+    //     if (!$uploadedFile) {
+    //         throw new BadRequestHttpException('Un utilisateur doit être identifié par une photo');
+    //     }
+    //     $image = fopen($uploadedFile->getRealPath(), 'r');
+    //     $type = $uploadedFile->getMimeType();
+    //     $newUser['avatar'] = $image;
+    //     $newUser['avatarType'] = $type;
+
+    //     $user = $this->serializer->denormalize($nUser, User::class, true);
+    //     $user->setPassword($this->encoder->encodePassword($user, $nUser['password']));
+    //     return $user;
+    // }
+
     public function addUser(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder, SerializerInterface $serializer)
     {
         $newUser = $request->request->all();
@@ -119,7 +144,6 @@ class UserController extends AbstractController
 
         $manager->persist($apprenant);
         $manager->flush();
-        // echo "<img src='data:$type;base64,$avatar'>";
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
@@ -134,8 +158,21 @@ class UserController extends AbstractController
      *  }
      * )
      */
-    public function updateApprenant(Request $req, $id)
+    public function updateApprenant(Request $req, $id, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
-        dd($req->request);
+        $newApprenant = json_decode($req->getContent(), true);
+        $apprenant = $req->attributes->get('data');
+        // $apprenantJson = $serializer->serialize($apprenant, "json");
+        // $apprenantTab = $serializer->decode($apprenantJson, "json");
+        // foreach ($newApprenant as $k => $val) {
+        //     foreach ($apprenantTab as $key => $v) {
+        //         if ($k === $key) {
+        //             $apprenantTab[$key] = $val;
+        //         }
+        //     }
+        // }
+        // $apprenantJson = $serializer->encode($apprenantTab, "json");
+        // $apprenant = $serializer->deserialize($apprenantJson, User::class, "json", ['groups' => 'profil:read']);
+        dd($apprenant->getUsername());
     }
 }
