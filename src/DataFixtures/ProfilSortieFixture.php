@@ -2,8 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
-use App\Entity\Profil;
+use App\Entity\Apprenant;
 use App\Entity\ProfilSortie;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -12,15 +11,20 @@ class ProfilSortieFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-
-        $profil = $manager->getRepository(Profil::class)->findOneBy(['libelle' => 'APPRENANT']);
-        $apprenants = $manager->getRepository(User::class)->findBy(['profil' => $profil]);
+        // $profilsorties = ["Designer", "Full Stack", "CMS"];
+        // foreach ($profilsorties as $val) {
+        //     $profilsortie = new ProfilSortie();
+        //     $profilsortie->setLibelle($val);
+        //     $manager->persist($profilsortie);
+        //     $manager->flush();
+        // }
+        $apprenants = $manager->getRepository(Apprenant::class)->findAll();
 
         foreach ($apprenants as $apprenant) {
-            $id = rand(1, 2);
+            $id = rand(7, 9);
             $ps = $manager->getRepository(ProfilSortie::class)->find($id);
             $apprenant->addProfilSorty($ps);
-            $ps->addProfilApprenant($apprenant);
+            $ps->addApprenant($apprenant);
 
             $manager->persist($ps);
             $manager->flush();

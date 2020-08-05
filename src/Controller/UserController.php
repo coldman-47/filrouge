@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Profil;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,115 +40,5 @@ class UserController extends AbstractController
         // echo "<img src='data:$type;base64,$avatar'>";
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
-    }
-
-    /**
-     * @Route(
-     * name="apprenant_list",
-     * path="api/apprenants",
-     * methods={"GET"},
-     * defaults={
-     * "_api_resource_class"=User::class,
-     * "_api_collection_operation_name"="get_apprenants"
-     * }
-     * )
-     */
-    public function getApprenant(SerializerInterface $serializer, UserRepository $repo)
-    {
-        $apprenants = $repo->findByProfil("APPRENANT");
-        $apprenantsJson = $serializer->serialize(
-            $apprenants,
-            "json",
-            [
-                "groups" => ["profil:read"]
-            ]
-        );
-        return new JsonResponse($apprenantsJson, Response::HTTP_OK, [], true);
-    }
-    /**
-     * @Route(
-     * name="get_apprenant",
-     * path="api/apprenants/{id}/",
-     * methods={"GET"},
-     * defaults={
-     * "_api_resource_class"=User::class,
-     * "_api_item_operation_name"="update_apprenants"
-     * }
-     * )
-     */
-    public function getOneApprenant(SerializerInterface $serializer, UserRepository $repo, $id)
-    {
-        $apprenants = $repo->findOneByProfil('APPRENANT', $id);
-        $apprenantsJson = $serializer->serialize(
-            $apprenants,
-            "json",
-            [
-                "groups" => ["profil:read"]
-            ]
-        );
-        return new JsonResponse($apprenantsJson, Response::HTTP_OK, [], true);
-    }
-
-    /**
-     * @Route(
-     * "/api/apprenants/",
-     *  name="add_apprenant",
-     * defaults={
-     * "_api_resource_class"=User::class,
-     * "_api_collection_operation_name"="add_apprenant"
-     * }
-     * )
-     */
-    public function addApprenant(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder, SerializerInterface $serializer)
-    {
-        $newApprenant = $request->request->all();
-        $uploadedFile = $request->files->get('avatarFile');
-        if ($uploadedFile) {
-            $image = fopen($uploadedFile->getRealPath(), 'r');
-            $type = $uploadedFile->getMimeType();
-            $newApprenant['avatar'] = $image;
-            $newApprenant['avatarType'] = $type;
-        } else {
-            // throw new BadRequestHttpException('Un utilisateur doit être identifié par une photo');
-        }
-
-        $apprenant = $serializer->denormalize($newApprenant, User::class, true);
-        $apprenant->setPassword($encoder->encodePassword($apprenant, $newApprenant['password']));
-        $apprenant->setProfil($manager->getRepository(Profil::class)->findOneBy(['libelle' => 'APPRENANT']));
-
-        $manager->persist($apprenant);
-        $manager->flush();
-
-        return new JsonResponse("success", Response::HTTP_CREATED, [], true);
-    }
-
-    /**
-     * @Route(
-     *  "/api/apprenants/{id}/",
-     *  name="update_apprenant",
-     *  defaults={
-     *      "_api_resource_class"=User::class,
-     *      "_api_item_operation_name"="update_apprenant"
-     *  }
-     * )
-     */
-    public function updateApprenant(Request $req, EntityManagerInterface $manager, SerializerInterface $serializer)
-    {
-        $newApprenant = json_decode($req->getContent(), true);
-        $apprenant = $req->attributes->get('data');
-        foreach ($newApprenant as $k => $v) {
-            $setter = "set" . ucfirst($k);
-            $apprenant->$setter($v);
-        }
-        $manager->persist($apprenant);
-        $manager->flush();
-        $apprenantsJson = $serializer->serialize(
-            $apprenant,
-            "json",
-            [
-                "groups" => ["profil:read"]
-            ]
-        );
-        return new JsonResponse($apprenantsJson, Response::HTTP_OK, [], true);
     }
 }

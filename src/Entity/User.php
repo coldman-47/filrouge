@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Entity\Profil;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping\InheritanceType;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,10 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @InheritanceType("SINGLE_TABLE")
+ * @DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({"apprenant" = "Apprenant", "user" = "User"})
  * @ApiResource(
- *  attributes = {
- *      "enable_max_depth"=true
- *  },
  *  normalizationContext={
  *      "groups"={
  *          "profil:read"
@@ -26,7 +29,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *  },
  *  attributes = {
  *      "security" = "is_granted('ROLE_ADMIN')",
- *      "security_message" = "Accès refusé!"
+ *      "security_message" = "Accès refusé!",
+ *      "pagination_items_per_page"=5,
+ *      "enable_max_depth"=true
  *  },
  *  collectionOperations = {
  *      "get" = {
@@ -35,11 +40,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      "post_user" = {
  *          "method" = "post",
  *          "path" = "/admin/users/",
- *      },
- *      "apprenant_list",
- *      "add_apprenant" = {
- *          "method" = "post",
- *          "deserialize" = false
  *      }
  *  },
  *  itemOperations = {
@@ -48,11 +48,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      },
  *      "put" = {
  *          "path" = "/admin/users/{id}/",
- *      },
- *      "get_apprenant",
- *      "update_apprenant" = {
- *          "method" = "put",
- *          "deserialize" = false
  *      }
  *  }
  * )
@@ -119,37 +114,6 @@ class User implements UserInterface
      * @Groups({"profil:read"})
      */
     private $profil;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $genre;
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $adresse;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $statut;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $telephone;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=ProfilSortie::class, mappedBy="ProfilApprenant")
-     * @Groups({"profil:read"})
-     */
-    private $profilSorties;
-
-    public function __construct()
-    {
-        $this->profilSorties = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
@@ -307,82 +271,6 @@ class User implements UserInterface
     public function setAvatarType($avatarType)
     {
         $this->avatarType = $avatarType;
-
-        return $this;
-    }
-
-    public function getGenre(): ?string
-    {
-        return $this->genre;
-    }
-
-    public function setGenre(string $genre): self
-    {
-        $this->genre = $genre;
-
-        return $this;
-    }
-
-    public function getAdresse(): ?string
-    {
-        return $this->adresse;
-    }
-
-    public function setAdresse(?string $adresse): self
-    {
-        $this->adresse = $adresse;
-
-        return $this;
-    }
-
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(?string $statut): self
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone(?string $telephone): self
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|ProfilSortie[]
-     */
-    public function getProfilSorties(): Collection
-    {
-        return $this->profilSorties;
-    }
-
-    public function addProfilSorty(ProfilSortie $profilSorty): self
-    {
-        if (!$this->profilSorties->contains($profilSorty)) {
-            $this->profilSorties[] = $profilSorty;
-            $profilSorty->addProfilApprenant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProfilSorty(ProfilSortie $profilSorty): self
-    {
-        if ($this->profilSorties->contains($profilSorty)) {
-            $this->profilSorties->removeElement($profilSorty);
-            $profilSorty->removeProfilApprenant($this);
-        }
 
         return $this;
     }

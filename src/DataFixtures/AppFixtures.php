@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Apprenant;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Profil;
@@ -20,8 +21,8 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager)
     {
         // $faker = Factory::create('fr_FR');
-        // $profils = ["APPRENANT"];
-        // foreach ($profils as $key => $libelle) {
+        // $profils = ["ADMIN", "FORMATEUR", "CM", "APPRENANT"];
+        // foreach ($profils as $libelle) {
         //     $profil = new Profil();
         //     $profil->setLibelle($libelle);
         //     $manager->persist($profil);
@@ -29,6 +30,9 @@ class AppFixtures extends Fixture
 
         //     for ($i = 1; $i <= 3; $i++) {
         //         $user = new User();
+        //         if ($libelle === 'APPRENANT') {
+        //             $user = new Apprenant();
+        //         }
         //         $user->setProfil($profil);
         //         $user->setUsername(strtolower($libelle) . $i);
         //         $user->setNom($faker->name);

@@ -6,19 +6,11 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ProfilSortieRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilSortieRepository::class)
- * @ApiResource(
- *  normalizationContext={
- *      "groups"={
- *          "profil_sortie"
- *      }
- *  }
- * )
+ * @ApiResource()
  */
 class ProfilSortie
 {
@@ -26,26 +18,22 @@ class ProfilSortie
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"profil_sortie"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil_sortie", "profil:read"})
      */
     private $libelle;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="profilSorties")
-     * @Groups({"profil_sortie"})
-     * @ApiSubresource()
+     * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="profilSorties")
      */
-    private $ProfilApprenant;
+    private $apprenant;
 
     public function __construct()
     {
-        $this->ProfilApprenant = new ArrayCollection();
+        $this->apprenant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -66,26 +54,26 @@ class ProfilSortie
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|Apprenant[]
      */
-    public function getProfilApprenant(): Collection
+    public function getApprenant(): Collection
     {
-        return $this->ProfilApprenant;
+        return $this->apprenant;
     }
 
-    public function addProfilApprenant(User $profilApprenant): self
+    public function addApprenant(Apprenant $apprenant): self
     {
-        if (!$this->ProfilApprenant->contains($profilApprenant)) {
-            $this->ProfilApprenant[] = $profilApprenant;
+        if (!$this->apprenant->contains($apprenant)) {
+            $this->apprenant[] = $apprenant;
         }
 
         return $this;
     }
 
-    public function removeProfilApprenant(User $profilApprenant): self
+    public function removeApprenant(Apprenant $apprenant): self
     {
-        if ($this->ProfilApprenant->contains($profilApprenant)) {
-            $this->ProfilApprenant->removeElement($profilApprenant);
+        if ($this->apprenant->contains($apprenant)) {
+            $this->apprenant->removeElement($apprenant);
         }
 
         return $this;
