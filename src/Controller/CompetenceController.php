@@ -2,12 +2,6 @@
 
 namespace App\Controller;
 
-<<<<<<< HEAD
-use App\Entity\GroupeCompetence;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-=======
 use App\Entity\Competence;
 use App\Entity\GroupeCompetence;
 use App\Repository\GroupeCompetenceRepository;
@@ -18,7 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
->>>>>>> coldman
 
 class CompetenceController extends AbstractController
 {
@@ -33,11 +26,6 @@ class CompetenceController extends AbstractController
      *  }
      * )
      */
-<<<<<<< HEAD
-    public function getCompetence(Request $request)
-    {
-        dd($request->getContent());
-=======
     public function addGrpCompetence(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
         $grpCompeTab = json_decode($request->getContent(), true);
@@ -84,6 +72,5 @@ class CompetenceController extends AbstractController
         $manager->flush();
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
->>>>>>> coldman
     }
 }
