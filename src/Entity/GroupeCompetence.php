@@ -10,7 +10,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "get",
+ *      "add_grp_competences" = {
+ *          "method" = "post"
+ *      }
+ *  }
+ * )
  */
 class GroupeCompetence
 {

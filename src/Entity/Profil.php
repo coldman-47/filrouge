@@ -60,7 +60,7 @@ class Profil
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=20, unique=true)
      * @Groups({"profil:read"})
      * @Assert\NotBlank(
      *  message = "Champs Requis"

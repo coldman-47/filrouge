@@ -2,19 +2,26 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\GroupeCompetence;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 
 class CompetenceController extends AbstractController
 {
     /**
-     * @Route("/competence", name="competence")
+     * @Route(
+     *  "/api/admin/grpcompetences/",
+     *  name="add_grp_competences",
+     *  methods = {"POST"},
+     *  defaults={
+     *      "_api_resource_class" = GroupeCompetence::class,
+     *      "_api_collection_operation_name" = "add_grp_competences"
+     *  }
+     * )
      */
-    public function getCompetence($serializeI)
+    public function getCompetence(Request $request)
     {
-
-        return $this->render('competence/index.html.twig', [
-            'controller_name' => 'CompetenceController',
-        ]);
+        dd($request->getContent());
     }
 }

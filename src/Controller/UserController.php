@@ -17,7 +17,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class UserController extends AbstractController
 {
     /**
-     * @Route(path="/api/admin/users/", name="post_user", methods = {"POST"})
+     * @Route(
+     *  "/api/admin/users/",
+     *  name="post_user",
+     *  methods = {"POST"},
+     *  defaults={
+     *      "_api_resource_class" = User::class,
+     *      "_api_collection_operation_name" = "post_user"
+     *  }
+     * )
      */
     public function addUser(EntityManagerInterface $manager, Request $request, UserPasswordEncoderInterface $encoder, SerializerInterface $serializer)
     {
@@ -34,7 +42,6 @@ class UserController extends AbstractController
         $user = $serializer->denormalize($newUser, User::class, true);
         $user->setPassword($encoder->encodePassword($user, $newUser['password']));
         $user->setProfil($manager->getRepository(Profil::class)->findOneBy(['libelle' => $newUser['profils']]));
-
         $manager->persist($user);
         $manager->flush();
         // echo "<img src='data:$type;base64,$avatar'>";
