@@ -11,22 +11,23 @@ class ProfilSortieFixture extends Fixture
 {
     public function load(ObjectManager $manager)
     {
-        // $profilsorties = ["Designer", "Full Stack", "CMS"];
-        // foreach ($profilsorties as $val) {
-        //     $profilsortie = new ProfilSortie();
-        //     $profilsortie->setLibelle($val);
-        //     $manager->persist($profilsortie);
-        //     $manager->flush();
-        // }
+         $profilsorties = ["Designer", "Full Stack", "CMS"];
+         foreach ($profilsorties as $val) {
+             $profilsortie = new ProfilSortie();
+             $profilsortie->setLibelle($val);
+             $manager->persist($profilsortie);
+             $manager->flush();
+         }
         $apprenants = $manager->getRepository(Apprenant::class)->findAll();
 
         foreach ($apprenants as $apprenant) {
-            $id = rand(7, 9);
-            $ps = $manager->getRepository(ProfilSortie::class)->find($id);
-            $apprenant->addProfilSorty($ps);
-            $ps->addApprenant($apprenant);
+           
+            $ps = $manager->getRepository(ProfilSortie::class)->findAll();
+            $id=rand(0,count($ps) -1);
+            $apprenant->addProfilSorty($ps[$id]);
+            $ps[$id]->addApprenant($apprenant);
 
-            $manager->persist($ps);
+            $manager->persist($ps[$id]);
             $manager->flush();
         }
     }
