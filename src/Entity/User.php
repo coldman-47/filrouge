@@ -38,8 +38,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *          "path" = "/admin/users/",
  *      },
  *      "post_user" = {
- *          "method" = "post",
- *          "path" = "/admin/users/",
+ *          "deserialize" = false
  *      }
  *  },
  *  itemOperations = {
