@@ -10,7 +10,26 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=CompetenceRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "get",
+ *      "addcompetences" = {
+ *          "method" = "post",
+ *          "path" = "/admin/competences/"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/competences/{id}/"
+ *      },
+ *      "put" = {
+ *          "path" = "/admin/competences/{id}/"
+ *      },
+ *      "delete" = {
+ *          "path" = "/admin/competences/{id}/"
+ *      }
+ *  }
+ * )
  */
 class Competence
 {

@@ -10,7 +10,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "get" = {
+ *          "path" = "/admin/grpcompetences/"
+ *      },
+ *      "add_grp_competences" = {
+ *          "method" = "post",
+ *          "path" = "/admin/grpcompetences/"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/grpcompetences/{id}/"
+ *      },
+ *      "put" = {
+ *          "path" = "/admin/grpcompetences/{id}/"
+ *      }
+ *  }
+ * )
  */
 class GroupeCompetence
 {
@@ -22,7 +40,7 @@ class GroupeCompetence
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $libelle;
 
