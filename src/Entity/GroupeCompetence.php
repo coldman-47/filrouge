@@ -12,11 +12,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
  * @ApiResource(
  *  collectionOperations = {
-<<<<<<< HEAD
- *      "get",
- *      "add_grp_competences" = {
- *          "method" = "post"
-=======
  *      "get" = {
  *          "path" = "/admin/grpcompetences/"
  *      },
@@ -31,7 +26,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      },
  *      "put" = {
  *          "path" = "/admin/grpcompetences/{id}/"
->>>>>>> coldman
  *      }
  *  }
  * )
