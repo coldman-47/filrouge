@@ -12,17 +12,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
  * @ApiResource(
  *  collectionOperations = {
-<<<<<<< HEAD
- *      "get",
- *      "add_grp_competences" = {
- *          "method" = "post"
-=======
  *      "get" = {
  *          "path" = "/admin/grpcompetences/"
  *      },
  *      "add_grp_competences" = {
  *          "method" = "post",
- *          "path" = "/admin/grpcompetences/"
+ *          "path" = "/admin/grpcompetences/",
+ *          "deserialize" = false,
  *      }
  *  },
  *  itemOperations = {
@@ -31,7 +27,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      },
  *      "put" = {
  *          "path" = "/admin/grpcompetences/{id}/"
->>>>>>> coldman
  *      }
  *  }
  * )
@@ -55,9 +50,15 @@ class GroupeCompetence
      */
     private $competence;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Referentiel::class, mappedBy="grpCompetences")
+     */
+    private $referentiels;
+
     public function __construct()
     {
         $this->competence = new ArrayCollection();
+        $this->referentiels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -98,6 +99,34 @@ class GroupeCompetence
     {
         if ($this->competence->contains($competence)) {
             $this->competence->removeElement($competence);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Referentiel[]
+     */
+    public function getReferentiels(): Collection
+    {
+        return $this->referentiels;
+    }
+
+    public function addReferentiel(Referentiel $referentiel): self
+    {
+        if (!$this->referentiels->contains($referentiel)) {
+            $this->referentiels[] = $referentiel;
+            $referentiel->addGrpCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferentiel(Referentiel $referentiel): self
+    {
+        if ($this->referentiels->contains($referentiel)) {
+            $this->referentiels->removeElement($referentiel);
+            $referentiel->removeGrpCompetence($this);
         }
 
         return $this;
