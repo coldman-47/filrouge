@@ -2,10 +2,11 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Apprenant;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Profil;
+use App\Entity\Apprenant;
+use App\Entity\Formateur;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -32,7 +33,9 @@ class AppFixtures extends Fixture
                  $user = new User();
                  if($libelle==="APPRENANT"){
                      $user=new Apprenant();
-                 }
+                 }elseif($libelle==="FORMATEUR"){
+                    $user=new Formateur();
+                }
                  $user->setProfil($profil);
                  $user->setUsername(strtolower($libelle) . $i);
                  $user->setNom($faker->name);

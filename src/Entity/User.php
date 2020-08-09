@@ -20,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @InheritanceType("SINGLE_TABLE")
  * @DiscriminatorColumn(name="type", type="string")
- * @ORM\DiscriminatorMap({"apprenant" = "Apprenant", "user" = "User"})
+ * @ORM\DiscriminatorMap({"apprenant" = "Apprenant","formateur" = "Formateur","user" = "User"})
  * @ApiResource(
  *  normalizationContext={
  *      "groups"={

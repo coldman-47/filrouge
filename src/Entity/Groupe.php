@@ -10,25 +10,23 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
- *  @ApiResource(
+ * @ApiResource(
  *  collectionOperations = {
- *      "get" = {
- *          "path" = "/admin/groupes"
- *      },
- *      "addgroups" = {
+ *      "get",
+ *      "add_groupes" = {
  *          "method" = "post",
  *          "path" = "/admin/groupes"
  *      }
  *  },
  *  itemOperations = {
  *      "get" = {
- *          "path" = "/admin/groupes/{id}"
+ *          "path" = "/admin/groupes/{id}/"
  *      },
  *      "put" = {
- *          "path" = "/admin/groupes/{id}"
+ *          "path" = "/admin/groupes/{id}/"
  *      },
  *      "delete" = {
- *          "path" = "/admin/groupes/id/apprenants"
+ *          "path" = "/admin/groupes/{id}/"
  *      }
  *  }
  * )
@@ -48,13 +46,25 @@ class Groupe
     private $libelle;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Apprenant::class)
+     * @ORM\ManyToMany(targetEntity=Promo::class, inversedBy="groupes")
      */
-    private $apprenants;
+    private $promo;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
+     */
+    private $apprenant;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="groupes")
+     */
+    private $formateur;
 
     public function __construct()
     {
-        $this->apprenants = new ArrayCollection();
+        $this->promo = new ArrayCollection();
+        $this->apprenant = new ArrayCollection();
+        $this->formateur = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,17 +85,43 @@ class Groupe
     }
 
     /**
+     * @return Collection|Promo[]
+     */
+    public function getPromo(): Collection
+    {
+        return $this->promo;
+    }
+
+    public function addPromo(Promo $promo): self
+    {
+        if (!$this->promo->contains($promo)) {
+            $this->promo[] = $promo;
+        }
+
+        return $this;
+    }
+
+    public function removePromo(Promo $promo): self
+    {
+        if ($this->promo->contains($promo)) {
+            $this->promo->removeElement($promo);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Apprenant[]
      */
-    public function getApprenants(): Collection
+    public function getApprenant(): Collection
     {
-        return $this->apprenants;
+        return $this->apprenant;
     }
 
     public function addApprenant(Apprenant $apprenant): self
     {
-        if (!$this->apprenants->contains($apprenant)) {
-            $this->apprenants[] = $apprenant;
+        if (!$this->apprenant->contains($apprenant)) {
+            $this->apprenant[] = $apprenant;
         }
 
         return $this;
@@ -93,8 +129,34 @@ class Groupe
 
     public function removeApprenant(Apprenant $apprenant): self
     {
-        if ($this->apprenants->contains($apprenant)) {
-            $this->apprenants->removeElement($apprenant);
+        if ($this->apprenant->contains($apprenant)) {
+            $this->apprenant->removeElement($apprenant);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Formateur[]
+     */
+    public function getFormateur(): Collection
+    {
+        return $this->formateur;
+    }
+
+    public function addFormateur(Formateur $formateur): self
+    {
+        if (!$this->formateur->contains($formateur)) {
+            $this->formateur[] = $formateur;
+        }
+
+        return $this;
+    }
+
+    public function removeFormateur(Formateur $formateur): self
+    {
+        if ($this->formateur->contains($formateur)) {
+            $this->formateur->removeElement($formateur);
         }
 
         return $this;
