@@ -70,7 +70,7 @@ class Profil
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="profil", orphanRemoval=true)
-     * @ApiSubresource()
+     * @Groups({"profil:read"})
      */
     private $users;
 

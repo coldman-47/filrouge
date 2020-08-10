@@ -25,7 +25,7 @@ class ReferentielController extends AbstractController
      *  }
      * )
      */
-    public function index(Request $request, GroupeCompetenceRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
+    public function addReferentiel(Request $request, GroupeCompetenceRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
         $referentielTab = json_decode($request->getContent(), true);
 
