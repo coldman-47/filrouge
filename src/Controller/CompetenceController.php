@@ -30,6 +30,7 @@ class CompetenceController extends AbstractController
     {
         $grpCompeTab = json_decode($request->getContent(), true);
         $competencesTab = $grpCompeTab['competences'];
+        
         foreach ($competencesTab as $competence) {
             $competences[] = $serializer->denormalize($competence, Competence::class);
         }

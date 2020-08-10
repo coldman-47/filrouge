@@ -6,29 +6,34 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\GroupeRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get",
+ *      "get"={
+ *          "path" = "/admin/groupes"
+ *      },
  *      "add_groupes" = {
  *          "method" = "post",
  *          "path" = "/admin/groupes"
  *      }
  *  },
- *  itemOperations = {
- *      "get" = {
- *          "path" = "/admin/groupes/{id}/"
+ * itemOperations = {
+ *      "get"={
+ *          "path" = "/admin/groupes/{id}"
  *      },
- *      "put" = {
- *          "path" = "/admin/groupes/{id}/"
+ *      "put"={
+ *          "path" = "/admin/groupes/{id}"
  *      },
- *      "delete" = {
- *          "path" = "/admin/groupes/{id}/"
+ *       "DELETE"={
+ *          "path" = "/admin/groupes/id/apprenants"
  *      }
+ *      
  *  }
+ *  
  * )
  */
 class Groupe
@@ -47,16 +52,19 @@ class Groupe
 
     /**
      * @ORM\ManyToMany(targetEntity=Promo::class, inversedBy="groupes")
+     * @ApiSubresource
      */
     private $promo;
 
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
+     * @ApiSubresource
      */
     private $apprenant;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="groupes")
+     * @ApiSubresource
      */
     private $formateur;
 
