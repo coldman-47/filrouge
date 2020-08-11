@@ -46,7 +46,7 @@ class Groupe
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string",length=20)
      */
     private $libelle;
 
@@ -80,12 +80,12 @@ class Groupe
         return $this->id;
     }
 
-    public function getLibelle(): ?int
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function setLibelle(int $libelle): self
+    public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
 

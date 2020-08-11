@@ -29,19 +29,19 @@ class GroupeController extends AbstractController
     {
         //recuperation des données en json
         $groupeTab = json_decode($request->getContent(), true);
-        $apprenantsTab = $groupeTab['apprenants'];
+        $promosTab = $groupeTab['promos'];
 
-        //creation apprenant s'il n'y a en pas
-        foreach ($apprenantsTab as $apprenant) {
-            $apprenants[] = $serializer->denormalize($apprenant, Competence::class);
+        //creation promo s'il n'y a en pas
+        foreach ($promosTab as $promo) {
+            $promos[] = $serializer->denormalize($promo, Promo::class);
         }
-        $group = $serializer->denormalize($groupeTab, GroupeCompetence::class);
+        $group = $serializer->denormalize($groupeTab, Groupe::class);
 
-        //ajout apprenant dans groupe, vice versa
-        foreach ($apprenants as $apprenant) {
-            $group->addApprenant($apprenant);
-            $apprenant->addGroupe($group);
-            $manager->persist($apprenant);
+        //ajout promo dans groupe, vice versa
+        foreach ($promos as $promo) {
+            $group->addPromo($promo);
+            $promo->addGroupe($group);
+            $manager->persist($promo);
         }
         
 
