@@ -20,6 +20,16 @@ use Doctrine\Common\Collections\ArrayCollection;
  *          "path" = "/admin/referentiels/",
  *          "deserialize" = false
  *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/referentiels/{id}"
+ *      },
+ *      "setreferentiel" = {
+ *          "method" = "put",
+ *          "path" = "/admin/referentiels/",
+ *          "deserialize" = false
+ *      }
  *  }
  * )
  */
