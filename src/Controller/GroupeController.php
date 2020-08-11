@@ -49,4 +49,5 @@ class GroupeController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    
 }

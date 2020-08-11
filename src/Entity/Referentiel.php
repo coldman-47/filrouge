@@ -47,9 +47,15 @@ class Referentiel
      */
     private $grpCompetences;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Promo::class, mappedBy="referentil_promo")
+     */
+    private $promos;
+
     public function __construct()
     {
         $this->grpCompetences = new ArrayCollection();
+        $this->promos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -102,6 +108,34 @@ class Referentiel
     {
         if ($this->grpCompetences->contains($grpCompetence)) {
             $this->grpCompetences->removeElement($grpCompetence);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Promo[]
+     */
+    public function getPromos(): Collection
+    {
+        return $this->promos;
+    }
+
+    public function addPromo(Promo $promo): self
+    {
+        if (!$this->promos->contains($promo)) {
+            $this->promos[] = $promo;
+            $promo->addReferentilPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromo(Promo $promo): self
+    {
+        if ($this->promos->contains($promo)) {
+            $this->promos->removeElement($promo);
+            $promo->removeReferentilPromo($this);
         }
 
         return $this;
