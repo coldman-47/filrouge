@@ -12,10 +12,13 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=CompetenceRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get",
+ *      "get" = {
+ *          "path" = "/admin/competences/"
+ *      },
  *      "addcompetences" = {
  *          "method" = "post",
- *          "path" = "/admin/competences/"
+ *          "path" = "/admin/competences/",
+ *          "deserialize" = false
  *      }
  *  },
  *  itemOperations = {
@@ -23,7 +26,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *          "path" = "/admin/competences/{id}/"
  *      },
  *      "put" = {
- *          "path" = "/admin/competences/{id}/"
+ *          "path" = "/admin/competences/{id}/",
+ *          "deserialize" = false
  *      },
  *      "delete" = {
  *          "path" = "/admin/competences/{id}/"
@@ -41,7 +45,7 @@ class Competence
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $libelle;
 
@@ -55,9 +59,15 @@ class Competence
      */
     private $descriptif;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence")
+     */
+    private $niveaux;
+
     public function __construct()
     {
         $this->groupeCompetences = new ArrayCollection();
+        $this->niveaux = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,6 +123,37 @@ class Competence
     public function setDescriptif(string $descriptif): self
     {
         $this->descriptif = $descriptif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Niveau[]
+     */
+    public function getNiveaux(): Collection
+    {
+        return $this->niveaux;
+    }
+
+    public function addNiveau(Niveau $niveau): self
+    {
+        if (!$this->niveaux->contains($niveau)) {
+            $this->niveaux[] = $niveau;
+            $niveau->setCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNiveau(Niveau $niveau): self
+    {
+        if ($this->niveaux->contains($niveau)) {
+            $this->niveaux->removeElement($niveau);
+            // set the owning side to null (unless already changed)
+            if ($niveau->getCompetence() === $this) {
+                $niveau->setCompetence(null);
+            }
+        }
 
         return $this;
     }
