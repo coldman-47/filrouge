@@ -131,12 +131,12 @@ class CompetenceController extends AbstractController
         $delgrpCmpTab = @$newCompeTab["dropGroupeCompetences"];
         if (!empty($delgrpCmpTab)) {
             $nGC -= sizeof($delgrpCmpTab);
-            if ($nGC < 1) {
+            if ($nGC >= 1) {
                 foreach ($delgrpCmpTab as $val) {
                     $oldgrpCmpt = $repoGC->findOneBy(['libelle' => $val]);
                     if (!empty($oldgrpCmpt)) {
                         $exist = false;
-                        foreach ($competence->getGroupeCompetences() as $v) {
+                        foreach ($grpCmpts as $v) {
                             if ($oldgrpCmpt == $v) {
                                 $exist = true;
                                 break;
@@ -147,7 +147,7 @@ class CompetenceController extends AbstractController
                         }
                         $competence->removeGroupeCompetence($oldgrpCmpt);
                     } else {
-                        return new Response("Le groupe de compétence que vous essayé de supprimer n'éxiste pas!");
+                        return new Response("Le groupe de compétence que vous essayez de supprimer n'éxiste pas!");
                     }
                 }
             } else {
