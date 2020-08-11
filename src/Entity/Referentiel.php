@@ -17,7 +17,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      },
  *      "addreferentiel" = {
  *          "method" = "post",
- *          "path" = "/admin/referentiels/"
+ *          "path" = "/admin/referentiels/",
+ *          "deserialize" = false
  *      }
  *  }
  * )
