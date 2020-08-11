@@ -65,12 +65,8 @@ class TagController extends AbstractController
     {
         $tagTab = json_decode($request->getContent(), true);
        
-        $groupeTag = $repo->findOneBy(['libelles' => $tagTab["GroupTag"]]);
         $tag = $serializer->denormalize($tagTab, Tag::class);
         
-        $tag->addGroupeTag($groupeTag);
-        
-        $manager->persist($groupeTag);
         $manager->persist($tag);
         $manager->flush();
 
