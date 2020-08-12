@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\GroupeCompetence;
 use App\Entity\Referentiel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,12 +28,19 @@ class ReferentielController extends AbstractController
      */
     public function addReferentiel(Request $request, GroupeCompetenceRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
-        $referentielTab = json_decode($request->getContent(), true);
-
-        $grpCompetences = $repo->findOneBy(['libelle' => $referentielTab["competences"]]);
-
+        $referentielTab = $request->request->all();
+        $uploadedFile = $request->files->get('programme');
+        if ($uploadedFile) {
+            $programme = fopen($uploadedFile->getRealPath(), 'r');
+            $referentielTab['programme'] = $programme;
+        }
+        $grpcmptIds = explode(',', $referentielTab['grpCompetences']);
+        $prefix = '/api/admin/grpcompetences/';
+        foreach ($grpcmptIds as $val) {
+            $grpCompetences[] = $prefix . trim($val);
+        }
+        $referentielTab['grpCompetences'] = $grpCompetences;
         $referentiel = $serializer->denormalize($referentielTab, Referentiel::class);
-        $referentiel->addGrpCompetence($grpCompetences);
 
         $manager->persist($referentiel);
         $manager->flush();
@@ -58,7 +66,7 @@ class ReferentielController extends AbstractController
         foreach ($data as $k => $v) {
             $setter = 'set' . ucfirst($k);
             if (!method_exists($referentiel, $setter)) {
-                return new Response("La méthode $setter n'éxiste pas dans l'entité Referentiel");
+                return new Response("La méthode $setter() n'éxiste pas dans l'entité Referentiel");
             }
             $referentiel->$setter($v);
         }
