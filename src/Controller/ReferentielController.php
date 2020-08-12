@@ -51,30 +51,42 @@ class ReferentielController extends AbstractController
      *  }
      * )
      */
-    public function setReferentiel(Request $request)
+    public function setReferentiel(Request $request, EntityManagerInterface $manager)
     {
-        $data = $this->fetchFormData($request, 'programme');
-        dd(($data));
+        $referentiel = $request->attributes->get('data');
+        $data = $this->putFormData($request, 'programme');
+        foreach ($data as $k => $v) {
+            $setter = 'set' . ucfirst($k);
+            if (!method_exists($referentiel, $setter)) {
+                return new Response("La méthode $setter n'éxiste pas dans l'entité Referentiel");
+            }
+            $referentiel->$setter($v);
+        }
+        $manager->persist($referentiel);
+        $manager->flush();
+        dd(($referentiel));
     }
-
-    function fetchFormData(Request $request, string $fileName)
+    function putFormData(Request $request, string $fileName = null)
     {
         $raw = $request->getContent();
         $delimiter = "multipart/form-data; boundary=";
         $boundary = "--" . explode($delimiter, $request->headers->get("content-type"))[1];
         $elements = str_replace([$boundary, "Content-Disposition: form-data;", "name="], "", $raw);
         $elementsTab = explode("\r\n\r\n", $elements);
-        $json = [];
+        $data = [];
         for ($i = 0; isset($elementsTab[$i + 1]); $i += 2) {
             $key = str_replace(["\r\n", ' "', '"'], '', $elementsTab[$i]);
             if (strchr($key, $fileName)) {
-                $json[$fileName] =  base64_encode($elementsTab[$i + 1]);
-                // echo "<img src='data:image;base64," . $json[$fileName] . "'>";
+                $stream = fopen('php://memory', 'r+');
+                fwrite($stream, base64_encode($elementsTab[$i + 1]));
+                rewind($stream);
+                $data[$fileName] =  $stream;
+                // echo "<img src='data:image;base64," . $data[$fileName] . "'>";
             } else {
                 $val = str_replace(["\r\n", "--"], '', $elementsTab[$i + 1]);
-                $json[$key] =  $val;
+                $data[$key] =  $val;
             }
         }
-        return $json;
+        return $data;
     }
 }

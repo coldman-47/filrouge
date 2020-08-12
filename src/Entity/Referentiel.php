@@ -62,6 +62,11 @@ class Referentiel
      */
     private $promos;
 
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $programme;
+
     public function __construct()
     {
         $this->grpCompetences = new ArrayCollection();
@@ -147,6 +152,18 @@ class Referentiel
             $this->promos->removeElement($promo);
             $promo->removeReferentilPromo($this);
         }
+
+        return $this;
+    }
+
+    public function getProgramme()
+    {
+        return stream_get_contents($this->programme);
+    }
+
+    public function setProgramme($programme): self
+    {
+        $this->programme = stream_get_contents($programme);
 
         return $this;
     }
