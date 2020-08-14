@@ -12,7 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get" = {
+ *      "getreferentiel" = {
  *          "path" = "/admin/referentiels/"
  *      },
  *      "addreferentiel" = {
@@ -27,7 +27,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      },
  *      "setreferentiel" = {
  *          "method" = "put",
- *          "path" = "/admin/referentiels/",
+ *          "path" = "/admin/referentiels/{id}",
+ *          "deserialize" = false
+ *      },
+ *      "delreferentiel" = {
+ *          "method" = "delete",
+ *          "path" = "/admin/referentiels/{id}",
  *          "deserialize" = false
  *      }
  *  }
@@ -66,6 +71,11 @@ class Referentiel
      * @ORM\Column(type="blob", nullable=true)
      */
     private $programme;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleted;
 
     public function __construct()
     {
@@ -164,6 +174,18 @@ class Referentiel
     public function setProgramme($programme): self
     {
         $this->programme = stream_get_contents($programme);
+
+        return $this;
+    }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(?bool $deleted): self
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }

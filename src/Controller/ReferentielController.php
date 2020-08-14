@@ -7,6 +7,7 @@ use App\Entity\Referentiel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\GroupeCompetenceRepository;
+use App\Repository\ReferentielRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +19,25 @@ class ReferentielController extends AbstractController
     /**
      * @Route(
      *  "/api/admin/referentiels/",
+     *  name="getreferentiel",
+     *  methods = {"GET"},
+     *  defaults={
+     *      "_api_resource_class" = Referentiel::class,
+     *      "_api_collection_operation_name" = "getreferentiel"
+     *  }
+     * )
+     */
+    public function getReferentiel(ReferentielRepository $repo, SerializerInterface $serializer)
+    {
+        $referentiels = $repo->findBy(['deleted' => false]);
+        $referentielJson = $serializer->serialize($referentiels, "json");
+        return new JsonResponse($referentielJson, Response::HTTP_CREATED, [], true);
+        dd($referentielJson);
+    }
+
+    /**
+     * @Route(
+     *  "/api/admin/referentiels/",
      *  name="addreferentiel",
      *  methods = {"POST"},
      *  defaults={
@@ -26,7 +46,7 @@ class ReferentielController extends AbstractController
      *  }
      * )
      */
-    public function addReferentiel(Request $request, GroupeCompetenceRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
+    public function addReferentiel(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
         $referentielTab = $request->request->all();
         $uploadedFile = $request->files->get('programme');
@@ -72,8 +92,29 @@ class ReferentielController extends AbstractController
         }
         $manager->persist($referentiel);
         $manager->flush();
-        dd(($referentiel));
+        return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+
+    /**
+     * @Route(
+     *  "/api/admin/referentiels/{id}",
+     *  name="delreferentiel",
+     *  methods = {"DELETE"},
+     *  defaults={
+     *      "_api_resource_class" = Referentiel::class,
+     *      "_api_item_operation_name" = "delreferentiel"
+     *  }
+     * )
+     */
+    public function delReferentiel(Request $request, EntityManagerInterface $manager)
+    {
+        $ref = $request->attributes->get('data');
+        $ref->setDeleted(true);
+        $manager->persist($ref);
+        $manager->flush();
+        return new JsonResponse("success", Response::HTTP_CREATED, [], true);
+    }
+
     function putFormData(Request $request, string $fileName = null)
     {
         $raw = $request->getContent();
