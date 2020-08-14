@@ -12,12 +12,27 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get" = {
+ *      "getreferentiel" = {
  *          "path" = "/admin/referentiels/"
  *      },
  *      "addreferentiel" = {
  *          "method" = "post",
  *          "path" = "/admin/referentiels/",
+ *          "deserialize" = false
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/referentiels/{id}"
+ *      },
+ *      "setreferentiel" = {
+ *          "method" = "put",
+ *          "path" = "/admin/referentiels/{id}",
+ *          "deserialize" = false
+ *      },
+ *      "delreferentiel" = {
+ *          "method" = "delete",
+ *          "path" = "/admin/referentiels/{id}",
  *          "deserialize" = false
  *      }
  *  }
@@ -51,6 +66,16 @@ class Referentiel
      * @ORM\ManyToMany(targetEntity=Promo::class, mappedBy="referentil_promo")
      */
     private $promos;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $programme;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleted;
 
     public function __construct()
     {
@@ -137,6 +162,30 @@ class Referentiel
             $this->promos->removeElement($promo);
             $promo->removeReferentilPromo($this);
         }
+
+        return $this;
+    }
+
+    public function getProgramme()
+    {
+        return stream_get_contents($this->programme);
+    }
+
+    public function setProgramme($programme): self
+    {
+        $this->programme = stream_get_contents($programme);
+
+        return $this;
+    }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(?bool $deleted): self
+    {
+        $this->deleted = $deleted;
 
         return $this;
     }
