@@ -4,7 +4,7 @@ namespace App\Controller;
 use App\Entity\Promo;
 use App\Entity\Groupe;
 use App\Repository\PromoRepository;
-use App\Repository\GroupeCompetenceRepository;
+use App\Repository\ApprenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +26,7 @@ class PromoController extends AbstractController
      *  }
      * )
      */
-    public function addpromo(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager)
+    public function addpromo(Request $request,ApprenantRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
 
         $promoTab = json_decode($request->getContent(), true);
@@ -34,16 +34,27 @@ class PromoController extends AbstractController
         foreach ($groupeTab as $groupe) {
             $groupes[] = $serializer->denormalize($groupe, Groupe::class);
         }
+        
         unset($promoTab['groupes']);
+        
         $promos = $serializer->denormalize($promoTab, Promo::class);
+        $promos->SetFabrique('SONATEL ACADEMY');
         foreach ($groupes as $groupe) {
+            $groupe->setLibelle('GP');
             $promos->addGroupe($groupe);
+            $apprenants=$groupe->getApprenants();
+            // dd($apprenants[0]->getGroupes());
+            foreach($apprenants as $apprenant){
+                $grp=count($apprenant->getGroupes());
+                dd($grp);
+            }
             $manager->persist($groupe);
         }
-
+        dd($groupeTab);
         $manager->persist($promos);
         $manager->flush();
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    
 }

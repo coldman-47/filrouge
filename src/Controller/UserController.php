@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Profil;
+use App\Entity\Apprenant;
+use App\Repository\UserRepository;
+use App\Repository\ApprenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,4 +51,23 @@ class UserController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    // /**
+    //  * @Route(
+    //  *  "/api/admin/apprenants/",
+    //  *  name="getapprenants",
+    //  *  methods = {"GET"},
+    //  *  defaults={
+    //  *      "_api_resource_class" = Apprenant::class,
+    //  *      "_api_collection_operation_name" = "getapprenant"
+    //  *  }
+    //  * )
+    //  */
+    // public function getApprenant(ApprenantRepository $repo, SerializerInterface $serializer)
+    // {
+    //     $apprenants = $repo->findAll();
+    //     dd($apprenants);
+    //     $appJson = $serializer->serialize($apprenants, "json");
+    //     return new JsonResponse($appJson, Response::HTTP_CREATED, [], true);
+        
+    // }
 }

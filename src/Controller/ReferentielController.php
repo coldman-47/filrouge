@@ -28,9 +28,9 @@ class ReferentielController extends AbstractController
     public function addReferentiel(Request $request, GroupeCompetenceRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
         $referentielTab = json_decode($request->getContent(), true);
-
+        
         $grpCompetences = $repo->findOneBy(['libelle' => $referentielTab["competences"]]);
-
+        
         $referentiel = $serializer->denormalize($referentielTab, Referentiel::class);
         $referentiel->addGrpCompetence($grpCompetences);
 
