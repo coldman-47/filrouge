@@ -51,23 +51,5 @@ class UserController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
-    // /**
-    //  * @Route(
-    //  *  "/api/admin/apprenants/",
-    //  *  name="getapprenants",
-    //  *  methods = {"GET"},
-    //  *  defaults={
-    //  *      "_api_resource_class" = Apprenant::class,
-    //  *      "_api_collection_operation_name" = "getapprenant"
-    //  *  }
-    //  * )
-    //  */
-    // public function getApprenant(ApprenantRepository $repo, SerializerInterface $serializer)
-    // {
-    //     $apprenants = $repo->findAll();
-    //     dd($apprenants);
-    //     $appJson = $serializer->serialize($apprenants, "json");
-    //     return new JsonResponse($appJson, Response::HTTP_CREATED, [], true);
-        
-    // }
+    
 }

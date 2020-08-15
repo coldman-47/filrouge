@@ -11,6 +11,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
+<<<<<<< HEAD
  * collectionOperations={
  *      "get"={
  *      "path"="/admin/apprenants/"
@@ -21,6 +22,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *      "path"="/admin/apprenants/{id}"
  *      }
  * }
+=======
+ *  collectionOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants/{id}"
+ *      }
+ *  }
+>>>>>>> 8a7ca0b397967730ac6e96e0b1ef85f07cc1064d
  * )
  */
 class Apprenant extends User
