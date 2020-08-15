@@ -48,14 +48,14 @@ class Groupe
     private $libelle;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Apprenant::class)
-     */
-    private $apprenants;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
      */
     private $promo;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Apprenant::class, mappedBy="groupes")
+     */
+    private $apprenants;
 
     public function __construct()
     {
@@ -78,6 +78,18 @@ class Groupe
         return $this;
     }
 
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Apprenant[]
      */
@@ -90,6 +102,7 @@ class Groupe
     {
         if (!$this->apprenants->contains($apprenant)) {
             $this->apprenants[] = $apprenant;
+            $apprenant->addGroupe($this);
         }
 
         return $this;
@@ -99,19 +112,8 @@ class Groupe
     {
         if ($this->apprenants->contains($apprenant)) {
             $this->apprenants->removeElement($apprenant);
+            $apprenant->removeGroupe($this);
         }
-
-        return $this;
-    }
-
-    public function getPromo(): ?Promo
-    {
-        return $this->promo;
-    }
-
-    public function setPromo(?Promo $promo): self
-    {
-        $this->promo = $promo;
 
         return $this;
     }
