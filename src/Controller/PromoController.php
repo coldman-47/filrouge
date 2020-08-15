@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Promo;
 use App\Entity\Groupe;
 use App\Repository\PromoRepository;
 use App\Repository\ApprenantRepository;
+use App\Repository\GroupeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +28,7 @@ class PromoController extends AbstractController
      *  }
      * )
      */
-    public function addpromo(Request $request,ApprenantRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
+    public function addpromo(Request $request, GroupeRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
 
         $promoTab = json_decode($request->getContent(), true);
@@ -34,27 +36,32 @@ class PromoController extends AbstractController
         foreach ($groupeTab as $groupe) {
             $groupes[] = $serializer->denormalize($groupe, Groupe::class);
         }
-        
+
         unset($promoTab['groupes']);
-        
+
         $promos = $serializer->denormalize($promoTab, Promo::class);
         $promos->SetFabrique('SONATEL ACADEMY');
         foreach ($groupes as $groupe) {
             $groupe->setLibelle('GP');
             $promos->addGroupe($groupe);
-            $apprenants=$groupe->getApprenants();
-            // dd($apprenants[0]->getGroupes());
-            foreach($apprenants as $apprenant){
-                $grp=count($apprenant->getGroupes());
-                dd($grp);
+            $apprenants = $groupe->getApprenants();
+            foreach ($apprenants as $apprenant) {
+                $grps = $apprenant->getGroupes();
+                $gp = 0;
+                foreach ($grps as $grp) {
+                    if ($grp->getLibelle() === 'GP') {
+                        $gp++;
+                        if ($gp > 1) {
+                            return new Response("Un apprenant ne peut appartenir qu'à une seule promo.");
+                        }
+                    }
+                }
             }
             $manager->persist($groupe);
         }
-        dd($groupeTab);
         $manager->persist($promos);
         $manager->flush();
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
-    
 }

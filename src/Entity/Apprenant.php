@@ -52,14 +52,14 @@ class Apprenant extends User
     private $profilSorties;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Groupe::class, mappedBy="apprenant")
-     */
-    private $groupes;
-
-    /**
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $attente;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Groupe::class, inversedBy="apprenants")
+     */
+    private $groupes;
 
     
 
@@ -145,6 +145,18 @@ class Apprenant extends User
         return $this;
     }
 
+    public function getAttente(): ?bool
+    {
+        return $this->attente;
+    }
+
+    public function setAttente(?bool $attente): self
+    {
+        $this->attente = $attente;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Groupe[]
      */
@@ -157,33 +169,17 @@ class Apprenant extends User
     {
         if (!$this->groupes->contains($groupe)) {
             $this->groupes[] = $groupe;
-            $groupe->addApprenant($this);
         }
 
         return $this;
     }
-
 
     public function removeGroupe(Groupe $groupe): self
     {
         if ($this->groupes->contains($groupe)) {
             $this->groupes->removeElement($groupe);
-            $groupe->removeApprenant($this);
         }
 
         return $this;
     }
-
-    public function getAttente()
-    {
-        return $this->attente;
-    }
-
-    public function setAttente(?bool $attente): self
-    {
-        $this->attente = $attente;
-
-        return $this;
-    }
-
 }
