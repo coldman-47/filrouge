@@ -11,20 +11,9 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
-<<<<<<< HEAD
- * collectionOperations={
- *      "get"={
- *      "path"="/admin/apprenants/"
- *      }
- * },
- * itemOperations={
- *      "get"={
- *      "path"="/admin/apprenants/{id}"
- *      }
- * }
-=======
  *  collectionOperations = {
- *      "get" = {
+ *      "getapprenant" = {
+ *          "method"="get",
  *          "path" = "/admin/apprenants"
  *      }
  *  },
@@ -33,7 +22,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *          "path" = "/admin/apprenants/{id}"
  *      }
  *  }
->>>>>>> 8a7ca0b397967730ac6e96e0b1ef85f07cc1064d
  * )
  */
 class Apprenant extends User
@@ -69,9 +57,11 @@ class Apprenant extends User
     private $groupes;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="boolean", nullable=true)
      */
     private $attente;
+
+    
 
     public function __construct()
     {
@@ -184,15 +174,16 @@ class Apprenant extends User
         return $this;
     }
 
-    public function getAttente(): ?string
+    public function getAttente()
     {
         return $this->attente;
     }
 
-    public function setAttente(string $attente): self
+    public function setAttente(?bool $attente): self
     {
         $this->attente = $attente;
 
         return $this;
     }
+
 }
