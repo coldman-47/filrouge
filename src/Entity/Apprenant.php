@@ -10,7 +10,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants/{id}"
+ *      }
+ *  }
+ * )
  */
 class Apprenant extends User
 {
