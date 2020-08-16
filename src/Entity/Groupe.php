@@ -43,12 +43,17 @@ class Groupe
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $libelle;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Apprenant::class)
+     * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
+     */
+    private $promo;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Apprenant::class, mappedBy="groupes")
      */
     private $apprenants;
 
@@ -61,15 +66,26 @@ class Groupe
     {
         return $this->id;
     }
-
-    public function getLibelle(): ?int
+    public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
-    public function setLibelle(int $libelle): self
+    public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
 
         return $this;
     }
@@ -86,6 +102,7 @@ class Groupe
     {
         if (!$this->apprenants->contains($apprenant)) {
             $this->apprenants[] = $apprenant;
+            $apprenant->addGroupe($this);
         }
 
         return $this;
@@ -95,6 +112,7 @@ class Groupe
     {
         if ($this->apprenants->contains($apprenant)) {
             $this->apprenants->removeElement($apprenant);
+            $apprenant->removeGroupe($this);
         }
 
         return $this;

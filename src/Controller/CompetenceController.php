@@ -168,19 +168,4 @@ class CompetenceController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
-
-    function fetchFormData()
-    {
-        //     $raw = $request->getContent();
-        //     $delimiter = "multipart/form-data; boundary=";
-        //     $boundary = "--" . explode($delimiter, $request->headers->get("content-type"))[1];
-        //     $elements = str_replace("name=", "", str_replace("Content-Disposition: form-data;", "", str_replace($boundary, "", $raw)));
-        //     $elementsTab = explode("\r\n", $elements);
-        //     $json = "{";
-        //     for ($i = 1; isset($elementsTab[$i + 2]); $i += 4) {
-        //         $json .= $elementsTab[$i] . ":" . $elementsTab[$i + 2] . ",";
-        //     }
-        //     $json .= "}";
-        //     dd(($json));
-    }
 }

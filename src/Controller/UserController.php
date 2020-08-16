@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Profil;
+use App\Entity\Apprenant;
+use App\Repository\UserRepository;
+use App\Repository\ApprenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,4 +51,5 @@ class UserController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    
 }

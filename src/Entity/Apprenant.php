@@ -10,7 +10,18 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants/{id}"
+ *      }
+ *  }
+ * )
  */
 class Apprenant extends User
 {
@@ -39,9 +50,20 @@ class Apprenant extends User
      */
     private $profilSorties;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $attente;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Groupe::class, inversedBy="apprenants")
+     */
+    private $groupes;
+
     public function __construct()
     {
         $this->profilSorties = new ArrayCollection();
+        $this->groupes = new ArrayCollection();
     }
 
     public function getGenre(): ?string
@@ -115,6 +137,44 @@ class Apprenant extends User
         if ($this->profilSorties->contains($profilSorty)) {
             $this->profilSorties->removeElement($profilSorty);
             $profilSorty->removeApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function getAttente(): ?bool
+    {
+        return $this->attente;
+    }
+
+    public function setAttente(?bool $attente): self
+    {
+        $this->attente = $attente;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupes(): Collection
+    {
+        return $this->groupes;
+    }
+
+    public function addGroupe(Groupe $groupe): self
+    {
+        if (!$this->groupes->contains($groupe)) {
+            $this->groupes[] = $groupe;
+        }
+
+        return $this;
+    }
+
+    public function removeGroupe(Groupe $groupe): self
+    {
+        if ($this->groupes->contains($groupe)) {
+            $this->groupes->removeElement($groupe);
         }
 
         return $this;
