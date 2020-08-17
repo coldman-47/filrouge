@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PromoController extends AbstractController
@@ -64,4 +65,25 @@ class PromoController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    /**
+     * @Route(
+     * name="promo_list",
+     * path="api/admin/promo/principal",
+     * methods={"GET"},
+     * defaults={
+     * "_api_resource_class"=Promo::class,
+     * "_api_collection_operation_name"="promo_list"
+     * }
+     * )
+     */
+    
+    Public function getpromotion(SerializerInterface $serializer,PromoRepository $repo)
+    {
+        $promo= $repo->findAll();
+        $Promot =$serializer->serialize($promo,"json",[
+            "groups"=>["promo:read_All"]
+        ]);
+        return new JsonResponse($Promot,Response::HTTP_OK,[],true);
+    }
+    
 }

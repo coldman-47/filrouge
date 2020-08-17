@@ -12,7 +12,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get" = {
+ *      "getapprenant" = {
+ *          "method"="get",
  *          "path" = "/admin/apprenants"
  *      }
  *  },
@@ -59,6 +60,8 @@ class Apprenant extends User
      * @ORM\ManyToMany(targetEntity=Groupe::class, inversedBy="apprenants")
      */
     private $groupes;
+
+    
 
     public function __construct()
     {

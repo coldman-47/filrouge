@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * subresourceOperations={
  *          "getPromo_ref"={
  *              "method"="GET",
- *              "path"="/admin/promos/{id}/referentiels"
+ *              "path"="/admin/promo/{id}/referentiels"
  *          },
  * },
  * attributes = {
@@ -27,16 +27,20 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  collectionOperations = {
  *      "get" = {
  *          "path" = "/admin/promos/",
- *           
+
  *      },
- *      "add_promo" = {
+ *     "add_promo" = {
  *          "method" = "post",
  *          "path" = "/admin/promos/",
  *          "deserialize" = false,
+ *      },
+ *      "promo_list" = {
+ *          "method" = "get",
+ *          "path" = "/admin/promo/principal",
+ *           "normalization_context"={"groups"={"promo:read_All"}},
+ *           
  *      }
  *  },
- * 
- * 
  *  itemOperations = {
  *      "get" = {
  *          "path" = "/admin/promos/{id}/",
@@ -56,74 +60,76 @@ class Promo
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
+     *
      */
     private $lieu;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read_All"})
      */
     private $ReferenceAgate;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     *@Groups({"promo:read","promo:read_All"})
      */
     private $fabrique;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $dateFin;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $titre;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promo")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $groupes;
 
     /**
      * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      * 
      */
     private $referentil_promo;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="promos")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $formateur;
 
