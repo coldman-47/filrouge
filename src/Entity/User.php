@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Profil;
+use App\Entity\Apprenant;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping\InheritanceType;

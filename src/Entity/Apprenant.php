@@ -10,7 +10,19 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ *  collectionOperations = {
+ *      "getapprenant" = {
+ *          "method"="get",
+ *          "path" = "/admin/apprenants"
+ *      }
+ *  },
+ *  itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/apprenants/{id}"
+ *      }
+ *  }
+ * )
  */
 class Apprenant extends User
 {
@@ -40,9 +52,16 @@ class Apprenant extends User
     private $profilSorties;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Groupe::class, mappedBy="apprenant")
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $attente;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Groupe::class, inversedBy="apprenants")
      */
     private $groupes;
+
+    
 
     public function __construct()
     {
@@ -126,6 +145,18 @@ class Apprenant extends User
         return $this;
     }
 
+    public function getAttente(): ?bool
+    {
+        return $this->attente;
+    }
+
+    public function setAttente(?bool $attente): self
+    {
+        $this->attente = $attente;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Groupe[]
      */
@@ -138,7 +169,6 @@ class Apprenant extends User
     {
         if (!$this->groupes->contains($groupe)) {
             $this->groupes[] = $groupe;
-            $groupe->addApprenant($this);
         }
 
         return $this;
@@ -148,7 +178,6 @@ class Apprenant extends User
     {
         if ($this->groupes->contains($groupe)) {
             $this->groupes->removeElement($groupe);
-            $groupe->removeApprenant($this);
         }
 
         return $this;
