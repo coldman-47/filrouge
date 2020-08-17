@@ -72,7 +72,7 @@ class Promo
     private $langue;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Groupe::class, mappedBy="promo")
+     * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promo")
      */
     private $groupes;
 
@@ -80,7 +80,6 @@ class Promo
     {
         $this->groupes = new ArrayCollection();
     }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -194,7 +193,7 @@ class Promo
     {
         if (!$this->groupes->contains($groupe)) {
             $this->groupes[] = $groupe;
-            $groupe->addPromo($this);
+            $groupe->setPromo($this);
         }
 
         return $this;
@@ -204,7 +203,10 @@ class Promo
     {
         if ($this->groupes->contains($groupe)) {
             $this->groupes->removeElement($groupe);
-            $groupe->removePromo($this);
+            // set the owning side to null (unless already changed)
+            if ($groupe->getPromo() === $this) {
+                $groupe->setPromo(null);
+            }
         }
 
         return $this;

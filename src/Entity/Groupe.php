@@ -8,28 +8,55 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
  * @ApiResource(
+ *  normalizationContext={
+ *      "groups"={
+ *          "apprenant:read"
+ *      }
+ *  },
  *  collectionOperations = {
- *      "get"={
- *          "path" = "/admin/groupes"
+ *      "get_groupes"={
+ *          "method" = "get",
+ *          "path" = "/admin/groupes",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
  *      },
  *      "add_groupes" = {
  *          "method" = "post",
- *          "path" = "/admin/groupes"
+ *          "path" = "/admin/groupes",
+ *          "deserialise"=false,
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
+ *      },
+ *      "get_groupes_apprenants"={
+ *          "method" = "get",
+ *          "path" = "admin/groupes/apprenants",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
  *      }
  *  },
  * itemOperations = {
  *      "get"={
- *          "path" = "/admin/groupes/{id}"
+ *          "path" = "/admin/groupes/{id}",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
  *      },
- *      "put"={
- *          "path" = "/admin/groupes/{id}"
+ *      "update_groupe"={
+ *          "method"="put",
+ *          "path" = "/admin/groupes/{id}",
+ *         "deserialize"=false,
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
  *      },
- *       "DELETE"={
- *          "path" = "/admin/groupes/id/apprenants"
+ *       "delete_groupe"={
+ *          "method"="delete",
+ *          "path" = "/admin/groupes/{id}/apprenants",
+ *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
+ *          "security_message" = "Accès refusé!"
  *      }
  *      
  *  }
@@ -50,29 +77,33 @@ class Groupe
      */
     private $libelle;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Promo::class, inversedBy="groupes")
-     * @ApiSubresource
-     */
-    private $promo;
+
 
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
      * @ApiSubresource
+     * @Groups({"apprenant:read"})
      */
     private $apprenant;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="groupes")
+     * @ORM\ManyToMany(targetEntity=Formateur::class, mappedBy="groupe")
      * @ApiSubresource
      */
-    private $formateur;
+    private $formateurs;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
+     * @ApiSubresource
+     */
+    private $promo;
 
     public function __construct()
     {
         $this->promo = new ArrayCollection();
         $this->apprenant = new ArrayCollection();
         $this->formateur = new ArrayCollection();
+        $this->formateurs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -91,33 +122,6 @@ class Groupe
 
         return $this;
     }
-
-    /**
-     * @return Collection|Promo[]
-     */
-    public function getPromo(): Collection
-    {
-        return $this->promo;
-    }
-
-    public function addPromo(Promo $promo): self
-    {
-        if (!$this->promo->contains($promo)) {
-            $this->promo[] = $promo;
-        }
-
-        return $this;
-    }
-
-    public function removePromo(Promo $promo): self
-    {
-        if ($this->promo->contains($promo)) {
-            $this->promo->removeElement($promo);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Apprenant[]
      */
@@ -147,26 +151,39 @@ class Groupe
     /**
      * @return Collection|Formateur[]
      */
-    public function getFormateur(): Collection
+    public function getFormateurs(): Collection
     {
-        return $this->formateur;
+        return $this->formateurs;
     }
-
     public function addFormateur(Formateur $formateur): self
     {
-        if (!$this->formateur->contains($formateur)) {
-            $this->formateur[] = $formateur;
+        if (!$this->formateurs->contains($formateur)) {
+            $this->formateurs[] = $formateur;
+            $formateur->addGroupe($this);
         }
-
         return $this;
     }
-
     public function removeFormateur(Formateur $formateur): self
     {
-        if ($this->formateur->contains($formateur)) {
-            $this->formateur->removeElement($formateur);
+        if ($this->formateurs->contains($formateur)) {
+            $this->formateurs->removeElement($formateur);
+            $formateur->removeGroupe($this);
         }
 
         return $this;
     }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
+
+        return $this;
+    }
+
+
 }
