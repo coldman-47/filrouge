@@ -72,44 +72,23 @@ class Groupe
      * @ORM\Column(type="integer")
      */
     private $id;
-
     /**
-<<<<<<< HEAD
      * @ORM\Column(type="string",length=20)
      * @Groups({"groupe:read_All"})
-=======
-     * @ORM\Column(type="string", length=255)
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
      */
     private $libelle;
-
-
-
     /**
-<<<<<<< HEAD
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
      * @ApiSubresource
-     * 
      * @Groups({"groupe:read_All","groupe:read"})
-=======
-     * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
-     */
-    private $promo;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Apprenant::class, mappedBy="groupes")
-     * @Groups({"promo:read"})
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
      */
     private $apprenant;
-
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, mappedBy="groupe")
      * @ApiSubresource
      *  @Groups({"groupe:read_All"})
      */
     private $formateurs;
-
     /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
      * @ApiSubresource
@@ -129,10 +108,6 @@ class Groupe
     {
         return $this->id;
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
     public function getLibelle(): ?string
     {
         return $this->libelle;
@@ -144,22 +119,6 @@ class Groupe
 
         return $this;
     }
-<<<<<<< HEAD
-=======
-
-    public function getPromo(): ?Promo
-    {
-        return $this->promo;
-    }
-
-    public function setPromo(?Promo $promo): self
-    {
-        $this->promo = $promo;
-
-        return $this;
-    }
-
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
     /**
      * @return Collection|Apprenant[]
      */
@@ -170,14 +129,8 @@ class Groupe
 
     public function addApprenant(Apprenant $apprenant): self
     {
-<<<<<<< HEAD
         if (!$this->apprenant->contains($apprenant)) {
             $this->apprenant[] = $apprenant;
-=======
-        if (!$this->apprenants->contains($apprenant)) {
-            $this->apprenants[] = $apprenant;
-            $apprenant->addGroupe($this);
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
         }
 
         return $this;
@@ -185,14 +138,8 @@ class Groupe
 
     public function removeApprenant(Apprenant $apprenant): self
     {
-<<<<<<< HEAD
         if ($this->apprenant->contains($apprenant)) {
             $this->apprenant->removeElement($apprenant);
-=======
-        if ($this->apprenants->contains($apprenant)) {
-            $this->apprenants->removeElement($apprenant);
-            $apprenant->removeGroupe($this);
->>>>>>> 2cb1960194d0a74dab2c30b777676b94734b5767
         }
 
         return $this;
