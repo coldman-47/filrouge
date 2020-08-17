@@ -14,8 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=GroupeRepository::class)
  * @ApiResource(
  *  normalizationContext={
- *      "groups"={
- *          "apprenant:read"
+ * "groups"={
+ *          "groupe:read_All"
  *      }
  *  },
  *  collectionOperations = {
@@ -36,7 +36,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "method" = "get",
  *          "path" = "admin/groupes/apprenants",
  *          "security" = "(is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR'))",
- *          "security_message" = "Accès refusé!"
+ *          "security_message" = "Accès refusé!",
+ *          "normalization_context"={"groups"={"groupe:read"}}
  *      }
  *  },
  * itemOperations = {
@@ -74,6 +75,7 @@ class Groupe
 
     /**
      * @ORM\Column(type="string",length=20)
+     * @Groups({"groupe:read_All"})
      */
     private $libelle;
 
@@ -82,19 +84,22 @@ class Groupe
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
      * @ApiSubresource
-     * @Groups({"apprenant:read"})
+     * 
+     * @Groups({"groupe:read_All","groupe:read"})
      */
     private $apprenant;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, mappedBy="groupe")
      * @ApiSubresource
+     *  @Groups({"groupe:read_All"})
      */
     private $formateurs;
 
     /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="groupes")
      * @ApiSubresource
+     *@Groups({"groupe:read_All"}) 
      */
     private $promo;
 
