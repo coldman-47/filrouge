@@ -76,14 +76,20 @@ class PromoController extends AbstractController
      * }
      * )
      */
-    
-    Public function getpromotion(SerializerInterface $serializer,PromoRepository $repo)
+
+    public function getpromotion(SerializerInterface $serializer, PromoRepository $repo)
     {
-        $promo= $repo->findAll();
-        $Promot =$serializer->serialize($promo,"json",[
-            "groups"=>["promo:read_All"]
+        $promos = $repo->findAll();
+        foreach ($promos as $promo) {
+            foreach ($promo->getGroupes() as $g) {
+                if ($g->getLibelle() !== 'GP') {
+                    $promo->removeGroupe($g);
+                }
+            }
+        }
+        $Promot = $serializer->serialize($promos, "json", [
+            "groups" => ["promo:read_All"]
         ]);
-        return new JsonResponse($Promot,Response::HTTP_OK,[],true);
+        return new JsonResponse($Promot, Response::HTTP_OK, [], true);
     }
-    
 }
