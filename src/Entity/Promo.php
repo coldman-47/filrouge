@@ -36,8 +36,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      "promo_list" = {
  *          "method" = "get",
- *          "path" = "/admin/promo/principal",
+ *          "path" = "api/admin/promo/apprenants/attente",
  *           "normalization_context"={"groups"={"promo:read_All"}},
+ *           
+ *      },
+ *      "App_attente" = {
+ *          "method" = "get",
+ *          "path" = "/admin/promo/principal",
+ *           "normalization_context"={"groups"={"promo:read_Attente"}},
  *           
  *      }
  *  },
@@ -60,33 +66,33 @@ class Promo
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      *
      */
     private $lieu;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $ReferenceAgate;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *@Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $fabrique;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $dateDebut;
 
@@ -116,13 +122,13 @@ class Promo
 
     /**
      * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promo")
-     * @Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $groupes;
 
     /**
      * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"promo:read","promo:read_All"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      * 
      */
     private $referentil_promo;

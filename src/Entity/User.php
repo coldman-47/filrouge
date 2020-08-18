@@ -35,7 +35,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      "enable_max_depth"=true
  *  },
  *  collectionOperations = {
- *      "getusers" = {
+ *      "getuser" = {
  *          "path" = "/admin/users/",
  *          "deserialize" = false
  *      },

@@ -92,4 +92,35 @@ class PromoController extends AbstractController
         ]);
         return new JsonResponse($Promot, Response::HTTP_OK, [], true);
     }
+
+    /**
+     * @Route(
+     * name="App_attente",
+     * path="api/admin/promo/apprenants/attente",
+     * methods={"GET"},
+     * defaults={
+     * "_api_resource_class"=Promo::class,
+     * "_api_collection_operation_name"="App_attente"
+     * }
+     * )
+     */
+
+    public function getAppAttente(SerializerInterface $serializer, PromoRepository $repo)
+    {
+        $promos = $repo->findAll();
+        foreach ($promos as $promo) {
+            foreach ($promo->getGroupes() as $g) {
+                foreach($g->getApprenant() as $app){
+                    if ($app->getAttente() == false) {
+                        $g->removeApprenant($app);
+                    }
+                   
+                }
+            }
+        }
+        $Promot = $serializer->serialize($promos, "json", [
+            "groups" => ["promo:read_Attente"]
+        ]);
+        return new JsonResponse($Promot, Response::HTTP_OK, [], true);
+    }
 }
