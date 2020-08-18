@@ -73,14 +73,13 @@ class Groupe
      */
     private $id;
     /**
-     * @ORM\Column(type="string",length=20)
-     * @Groups({"groupe:read_All"})
+     * @ORM\Column(type="string", length=255)
      */
     private $libelle;
+
     /**
-     * @ORM\ManyToMany(targetEntity=Apprenant::class, inversedBy="groupes")
-     * @ApiSubresource
-     * @Groups({"groupe:read_All","groupe:read"})
+     * @ORM\ManyToMany(targetEntity=Apprenant::class, mappedBy="groupes")
+     * @Groups({"promo:read", "promo:read_All"})
      */
     private $apprenant;
     /**
@@ -119,6 +118,19 @@ class Groupe
 
         return $this;
     }
+
+    public function getPromo(): ?Promo
+    {
+        return $this->promo;
+    }
+
+    public function setPromo(?Promo $promo): self
+    {
+        $this->promo = $promo;
+
+        return $this;
+    }
+
     /**
      * @return Collection|Apprenant[]
      */
@@ -129,8 +141,9 @@ class Groupe
 
     public function addApprenant(Apprenant $apprenant): self
     {
-        if (!$this->apprenant->contains($apprenant)) {
-            $this->apprenant[] = $apprenant;
+        if (!$this->apprenants->contains($apprenant)) {
+            $this->apprenants[] = $apprenant;
+            $apprenant->addGroupe($this);
         }
 
         return $this;
@@ -138,8 +151,9 @@ class Groupe
 
     public function removeApprenant(Apprenant $apprenant): self
     {
-        if ($this->apprenant->contains($apprenant)) {
-            $this->apprenant->removeElement($apprenant);
+        if ($this->apprenants->contains($apprenant)) {
+            $this->apprenants->removeElement($apprenant);
+            $apprenant->removeGroupe($this);
         }
 
         return $this;
@@ -169,18 +183,4 @@ class Groupe
 
         return $this;
     }
-
-    public function getPromo(): ?Promo
-    {
-        return $this->promo;
-    }
-
-    public function setPromo(?Promo $promo): self
-    {
-        $this->promo = $promo;
-
-        return $this;
-    }
-
-
 }
