@@ -79,7 +79,7 @@ class Groupe
 
     /**
      * @ORM\ManyToMany(targetEntity=Apprenant::class, mappedBy="groupes")
-     * @Groups({"promo:read", "promo:read_All"})
+     *@Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $apprenant;
     /**
@@ -95,12 +95,18 @@ class Groupe
      */
     private $promo;
 
+    /**
+     * @ORM\OneToMany(targetEntity=EtatBrief::class, mappedBy="groupe")
+     */
+    private $etatBriefs;
+
     public function __construct()
     {
         $this->promo = new ArrayCollection();
         $this->apprenant = new ArrayCollection();
         $this->formateur = new ArrayCollection();
         $this->formateurs = new ArrayCollection();
+        $this->etatBriefs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -179,6 +185,37 @@ class Groupe
         if ($this->formateurs->contains($formateur)) {
             $this->formateurs->removeElement($formateur);
             $formateur->removeGroupe($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|EtatBrief[]
+     */
+    public function getEtatBriefs(): Collection
+    {
+        return $this->etatBriefs;
+    }
+
+    public function addEtatBrief(EtatBrief $etatBrief): self
+    {
+        if (!$this->etatBriefs->contains($etatBrief)) {
+            $this->etatBriefs[] = $etatBrief;
+            $etatBrief->setGroupe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEtatBrief(EtatBrief $etatBrief): self
+    {
+        if ($this->etatBriefs->contains($etatBrief)) {
+            $this->etatBriefs->removeElement($etatBrief);
+            // set the owning side to null (unless already changed)
+            if ($etatBrief->getGroupe() === $this) {
+                $etatBrief->setGroupe(null);
+            }
         }
 
         return $this;
