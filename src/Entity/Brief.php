@@ -40,47 +40,47 @@ class Brief
     private $nomBrief;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $contexte;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $livrableAttendu;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $modalitePedagogique;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $critereEvaluation;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="blob",nullable=true)
      */
     private $imagePromo;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean",nullable=true)
      */
     private $archiver;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=true)
      */
     private $createAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $etat;
 
@@ -94,9 +94,28 @@ class Brief
      */
     private $etatBriefs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="brief")
+     */
+    private $briefMaPromos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BriefLivrable::class, mappedBy="brief")
+     */
+    private $briefLivrables;
+
+    /**
+     * @ORM\OneToMany(targetEntity=DetailBriefCompetence::class, mappedBy="brief")
+     */
+    private $detailBriefCompetences;
+
     public function __construct()
     {
         $this->etatBriefs = new ArrayCollection();
+        $this->briefMaPromos = new ArrayCollection();
+        $this->briefLivrables = new ArrayCollection();
+        $this->detailBriefCompetences = new ArrayCollection();
+       
     }
 
     public function getId(): ?int
@@ -278,4 +297,99 @@ class Brief
 
         return $this;
     }
+
+    /**
+     * @return Collection|BriefMaPromo[]
+     */
+    public function getBriefMaPromos(): Collection
+    {
+        return $this->briefMaPromos;
+    }
+
+    public function addBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if (!$this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos[] = $briefMaPromo;
+            $briefMaPromo->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if ($this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos->removeElement($briefMaPromo);
+            // set the owning side to null (unless already changed)
+            if ($briefMaPromo->getBrief() === $this) {
+                $briefMaPromo->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefLivrable[]
+     */
+    public function getBriefLivrables(): Collection
+    {
+        return $this->briefLivrables;
+    }
+
+    public function addBriefLivrable(BriefLivrable $briefLivrable): self
+    {
+        if (!$this->briefLivrables->contains($briefLivrable)) {
+            $this->briefLivrables[] = $briefLivrable;
+            $briefLivrable->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefLivrable(BriefLivrable $briefLivrable): self
+    {
+        if ($this->briefLivrables->contains($briefLivrable)) {
+            $this->briefLivrables->removeElement($briefLivrable);
+            // set the owning side to null (unless already changed)
+            if ($briefLivrable->getBrief() === $this) {
+                $briefLivrable->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DetailBriefCompetence[]
+     */
+    public function getDetailBriefCompetences(): Collection
+    {
+        return $this->detailBriefCompetences;
+    }
+
+    public function addDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    {
+        if (!$this->detailBriefCompetences->contains($detailBriefCompetence)) {
+            $this->detailBriefCompetences[] = $detailBriefCompetence;
+            $detailBriefCompetence->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    {
+        if ($this->detailBriefCompetences->contains($detailBriefCompetence)) {
+            $this->detailBriefCompetences->removeElement($detailBriefCompetence);
+            // set the owning side to null (unless already changed)
+            if ($detailBriefCompetence->getBrief() === $this) {
+                $detailBriefCompetence->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
 }

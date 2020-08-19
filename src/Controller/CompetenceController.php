@@ -51,7 +51,7 @@ class CompetenceController extends AbstractController
         foreach ($niveaux as $niveau) {
             $manager->persist($niveau);
         }
-
+dd();
         $manager->persist($grpCompetences);
         $manager->flush();
 

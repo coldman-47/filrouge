@@ -64,10 +64,16 @@ class Competence
      */
     private $niveaux;
 
+    /**
+     * @ORM\OneToMany(targetEntity=DetailBriefCompetence::class, mappedBy="competence")
+     */
+    private $detailBriefCompetences;
+
     public function __construct()
     {
         $this->groupeCompetences = new ArrayCollection();
         $this->niveaux = new ArrayCollection();
+        $this->detailBriefCompetences = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -152,6 +158,37 @@ class Competence
             // set the owning side to null (unless already changed)
             if ($niveau->getCompetence() === $this) {
                 $niveau->setCompetence(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|DetailBriefCompetence[]
+     */
+    public function getDetailBriefCompetences(): Collection
+    {
+        return $this->detailBriefCompetences;
+    }
+
+    public function addDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    {
+        if (!$this->detailBriefCompetences->contains($detailBriefCompetence)) {
+            $this->detailBriefCompetences[] = $detailBriefCompetence;
+            $detailBriefCompetence->setCompetence($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    {
+        if ($this->detailBriefCompetences->contains($detailBriefCompetence)) {
+            $this->detailBriefCompetences->removeElement($detailBriefCompetence);
+            // set the owning side to null (unless already changed)
+            if ($detailBriefCompetence->getCompetence() === $this) {
+                $detailBriefCompetence->setCompetence(null);
             }
         }
 

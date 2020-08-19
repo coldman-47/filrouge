@@ -61,12 +61,18 @@ class Apprenant extends User
      */
     private $groupes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="apprenant")
+     */
+    private $briefApprenants;
+
     
 
     public function __construct()
     {
         $this->profilSorties = new ArrayCollection();
         $this->groupes = new ArrayCollection();
+        $this->briefApprenants = new ArrayCollection();
     }
 
     public function getGenre(): ?string
@@ -178,6 +184,37 @@ class Apprenant extends User
     {
         if ($this->groupes->contains($groupe)) {
             $this->groupes->removeElement($groupe);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefApprenant[]
+     */
+    public function getBriefApprenants(): Collection
+    {
+        return $this->briefApprenants;
+    }
+
+    public function addBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if (!$this->briefApprenants->contains($briefApprenant)) {
+            $this->briefApprenants[] = $briefApprenant;
+            $briefApprenant->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if ($this->briefApprenants->contains($briefApprenant)) {
+            $this->briefApprenants->removeElement($briefApprenant);
+            // set the owning side to null (unless already changed)
+            if ($briefApprenant->getApprenant() === $this) {
+                $briefApprenant->setApprenant(null);
+            }
         }
 
         return $this;
