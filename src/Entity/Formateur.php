@@ -24,10 +24,16 @@ class Formateur extends User
      */
     private $briefs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Commentaire::class, mappedBy="formateur")
+     */
+    private $commentaires;
+
     public function __construct()
     {
         $this->groupe = new ArrayCollection();
         $this->briefs = new ArrayCollection();
+        $this->commentaires = new ArrayCollection();
     }
 
     /**
@@ -81,6 +87,37 @@ class Formateur extends User
             // set the owning side to null (unless already changed)
             if ($brief->getFormateur() === $this) {
                 $brief->setFormateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentaire[]
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setFormateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->contains($commentaire)) {
+            $this->commentaires->removeElement($commentaire);
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getFormateur() === $this) {
+                $commentaire->setFormateur(null);
             }
         }
 

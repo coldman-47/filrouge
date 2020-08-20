@@ -40,47 +40,42 @@ class Brief
     private $nomBrief;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $contexte;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $livrableAttendu;
-
-    /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $modalitePedagogique;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $critereEvaluation;
 
     /**
-     * @ORM\Column(type="blob")
+     * @ORM\Column(type="blob",nullable=true)
      */
     private $imagePromo;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean",nullable=true)
      */
     private $archiver;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=true)
      */
     private $createAt;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255,nullable=true)
      */
     private $etat;
 
@@ -94,9 +89,35 @@ class Brief
      */
     private $etatBriefs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="brief")
+     */
+    private $briefMaPromos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BriefLivrable::class, mappedBy="brief")
+     */
+    private $briefLivrables;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Ressource::class, mappedBy="brief")
+     */
+    private $ressources;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Niveau::class, inversedBy="briefs")
+     */
+    private $niveau;
+
     public function __construct()
     {
         $this->etatBriefs = new ArrayCollection();
+        $this->briefMaPromos = new ArrayCollection();
+        $this->briefLivrables = new ArrayCollection();
+        
+        $this->ressources = new ArrayCollection();
+        $this->niveau = new ArrayCollection();
+       
     }
 
     public function getId(): ?int
@@ -148,18 +169,6 @@ class Brief
     public function setContexte(string $contexte): self
     {
         $this->contexte = $contexte;
-
-        return $this;
-    }
-
-    public function getLivrableAttendu(): ?string
-    {
-        return $this->livrableAttendu;
-    }
-
-    public function setLivrableAttendu(string $livrableAttendu): self
-    {
-        $this->livrableAttendu = $livrableAttendu;
 
         return $this;
     }
@@ -278,4 +287,126 @@ class Brief
 
         return $this;
     }
+
+    /**
+     * @return Collection|BriefMaPromo[]
+     */
+    public function getBriefMaPromos(): Collection
+    {
+        return $this->briefMaPromos;
+    }
+
+    public function addBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if (!$this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos[] = $briefMaPromo;
+            $briefMaPromo->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if ($this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos->removeElement($briefMaPromo);
+            // set the owning side to null (unless already changed)
+            if ($briefMaPromo->getBrief() === $this) {
+                $briefMaPromo->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefLivrable[]
+     */
+    public function getBriefLivrables(): Collection
+    {
+        return $this->briefLivrables;
+    }
+
+    public function addBriefLivrable(BriefLivrable $briefLivrable): self
+    {
+        if (!$this->briefLivrables->contains($briefLivrable)) {
+            $this->briefLivrables[] = $briefLivrable;
+            $briefLivrable->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefLivrable(BriefLivrable $briefLivrable): self
+    {
+        if ($this->briefLivrables->contains($briefLivrable)) {
+            $this->briefLivrables->removeElement($briefLivrable);
+            // set the owning side to null (unless already changed)
+            if ($briefLivrable->getBrief() === $this) {
+                $briefLivrable->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    
+    /**
+     * @return Collection|Ressource[]
+     */
+    public function getRessources(): Collection
+    {
+        return $this->ressources;
+    }
+
+    public function addRessource(Ressource $ressource): self
+    {
+        if (!$this->ressources->contains($ressource)) {
+            $this->ressources[] = $ressource;
+            $ressource->setBrief($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRessource(Ressource $ressource): self
+    {
+        if ($this->ressources->contains($ressource)) {
+            $this->ressources->removeElement($ressource);
+            // set the owning side to null (unless already changed)
+            if ($ressource->getBrief() === $this) {
+                $ressource->setBrief(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Niveau[]
+     */
+    public function getNiveau(): Collection
+    {
+        return $this->niveau;
+    }
+
+    public function addNiveau(Niveau $niveau): self
+    {
+        if (!$this->niveau->contains($niveau)) {
+            $this->niveau[] = $niveau;
+        }
+
+        return $this;
+    }
+
+    public function removeNiveau(Niveau $niveau): self
+    {
+        if ($this->niveau->contains($niveau)) {
+            $this->niveau->removeElement($niveau);
+        }
+
+        return $this;
+    }
+
+    
 }
