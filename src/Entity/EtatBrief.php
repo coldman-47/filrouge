@@ -31,7 +31,6 @@ class EtatBrief
      */
     private $groupe;
 
-
     public function getStatut(): ?string
     {
         return $this->statut;

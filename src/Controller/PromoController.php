@@ -45,7 +45,7 @@ class PromoController extends AbstractController
         foreach ($groupes as $groupe) {
             $groupe->setLibelle('GP');
             $promos->addGroupe($groupe);
-            $apprenants = $groupe->getApprenants();
+            $apprenants = $groupe->getApprenant();
             foreach ($apprenants as $apprenant) {
                 $grps = $apprenant->getGroupes();
                 $gp = 0;

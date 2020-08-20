@@ -38,6 +38,7 @@ class CompetenceController extends AbstractController
             foreach ($competence['niveaux'] as $level => $niveau) {
                 $niveau['niveau'] = $level + 1;
                 $levels[$level] = $serializer->denormalize($niveau, Niveau::class);
+                $levels[$level]->setCompetence($cmpt);
             }
             $competences[] = $cmpt;
         }
@@ -49,7 +50,6 @@ class CompetenceController extends AbstractController
             $competence->addGroupeCompetence($grpCompetences);
             $manager->persist($competence);
         }
-
         $manager->persist($grpCompetences);
         $manager->flush();
 

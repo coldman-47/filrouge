@@ -139,11 +139,32 @@ class Promo
      */
     private $formateur;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="promo")
+     */
+    private $briefMaPromos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CompetenceValide::class, mappedBy="promo")
+     */
+    private $competenceValides;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="promo")
+     */
+    private $chats;
+
+    
+
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->referentil_promo = new ArrayCollection();
         $this->formateur = new ArrayCollection();
+        $this->briefMaPromos = new ArrayCollection();
+        $this->competenceValides = new ArrayCollection();
+        $this->chats = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -329,4 +350,99 @@ class Promo
 
         return $this;
     }
+
+    /**
+     * @return Collection|BriefMaPromo[]
+     */
+    public function getBriefMaPromos(): Collection
+    {
+        return $this->briefMaPromos;
+    }
+
+    public function addBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if (!$this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos[] = $briefMaPromo;
+            $briefMaPromo->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if ($this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos->removeElement($briefMaPromo);
+            // set the owning side to null (unless already changed)
+            if ($briefMaPromo->getPromo() === $this) {
+                $briefMaPromo->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetenceValide[]
+     */
+    public function getCompetenceValides(): Collection
+    {
+        return $this->competenceValides;
+    }
+
+    public function addCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if (!$this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides[] = $competenceValide;
+            $competenceValide->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if ($this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides->removeElement($competenceValide);
+            // set the owning side to null (unless already changed)
+            if ($competenceValide->getPromo() === $this) {
+                $competenceValide->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chat[]
+     */
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
+
+    public function addChat(Chat $chat): self
+    {
+        if (!$this->chats->contains($chat)) {
+            $this->chats[] = $chat;
+            $chat->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChat(Chat $chat): self
+    {
+        if ($this->chats->contains($chat)) {
+            $this->chats->removeElement($chat);
+            // set the owning side to null (unless already changed)
+            if ($chat->getPromo() === $this) {
+                $chat->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }
