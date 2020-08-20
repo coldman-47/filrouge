@@ -60,20 +60,22 @@ class Competence
     private $descriptif;
 
     /**
-     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence")
+     * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence", cascade={"persist"})
      */
     private $niveaux;
 
     /**
-     * @ORM\OneToMany(targetEntity=DetailBriefCompetence::class, mappedBy="competence")
+     * @ORM\OneToMany(targetEntity=CompetenceValide::class, mappedBy="competence")
      */
-    private $detailBriefCompetences;
+    private $competenceValides;
+
 
     public function __construct()
     {
         $this->groupeCompetences = new ArrayCollection();
         $this->niveaux = new ArrayCollection();
-        $this->detailBriefCompetences = new ArrayCollection();
+        $this->competenceValides = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -165,33 +167,35 @@ class Competence
     }
 
     /**
-     * @return Collection|DetailBriefCompetence[]
+     * @return Collection|CompetenceValide[]
      */
-    public function getDetailBriefCompetences(): Collection
+    public function getCompetenceValides(): Collection
     {
-        return $this->detailBriefCompetences;
+        return $this->competenceValides;
     }
 
-    public function addDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    public function addCompetenceValide(CompetenceValide $competenceValide): self
     {
-        if (!$this->detailBriefCompetences->contains($detailBriefCompetence)) {
-            $this->detailBriefCompetences[] = $detailBriefCompetence;
-            $detailBriefCompetence->setCompetence($this);
+        if (!$this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides[] = $competenceValide;
+            $competenceValide->setCompetence($this);
         }
 
         return $this;
     }
 
-    public function removeDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    public function removeCompetenceValide(CompetenceValide $competenceValide): self
     {
-        if ($this->detailBriefCompetences->contains($detailBriefCompetence)) {
-            $this->detailBriefCompetences->removeElement($detailBriefCompetence);
+        if ($this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides->removeElement($competenceValide);
             // set the owning side to null (unless already changed)
-            if ($detailBriefCompetence->getCompetence() === $this) {
-                $detailBriefCompetence->setCompetence(null);
+            if ($competenceValide->getCompetence() === $this) {
+                $competenceValide->setCompetence(null);
             }
         }
 
         return $this;
     }
+
+    
 }

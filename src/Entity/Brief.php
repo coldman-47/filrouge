@@ -52,11 +52,6 @@ class Brief
     /**
      * @ORM\Column(type="string", length=255,nullable=true)
      */
-    private $livrableAttendu;
-
-    /**
-     * @ORM\Column(type="string", length=255,nullable=true)
-     */
     private $modalitePedagogique;
 
     /**
@@ -105,16 +100,23 @@ class Brief
     private $briefLivrables;
 
     /**
-     * @ORM\OneToMany(targetEntity=DetailBriefCompetence::class, mappedBy="brief")
+     * @ORM\OneToMany(targetEntity=Ressource::class, mappedBy="brief")
      */
-    private $detailBriefCompetences;
+    private $ressources;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Niveau::class, inversedBy="briefs")
+     */
+    private $niveau;
 
     public function __construct()
     {
         $this->etatBriefs = new ArrayCollection();
         $this->briefMaPromos = new ArrayCollection();
         $this->briefLivrables = new ArrayCollection();
-        $this->detailBriefCompetences = new ArrayCollection();
+        
+        $this->ressources = new ArrayCollection();
+        $this->niveau = new ArrayCollection();
        
     }
 
@@ -167,18 +169,6 @@ class Brief
     public function setContexte(string $contexte): self
     {
         $this->contexte = $contexte;
-
-        return $this;
-    }
-
-    public function getLivrableAttendu(): ?string
-    {
-        return $this->livrableAttendu;
-    }
-
-    public function setLivrableAttendu(string $livrableAttendu): self
-    {
-        $this->livrableAttendu = $livrableAttendu;
 
         return $this;
     }
@@ -360,32 +350,59 @@ class Brief
         return $this;
     }
 
+    
     /**
-     * @return Collection|DetailBriefCompetence[]
+     * @return Collection|Ressource[]
      */
-    public function getDetailBriefCompetences(): Collection
+    public function getRessources(): Collection
     {
-        return $this->detailBriefCompetences;
+        return $this->ressources;
     }
 
-    public function addDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    public function addRessource(Ressource $ressource): self
     {
-        if (!$this->detailBriefCompetences->contains($detailBriefCompetence)) {
-            $this->detailBriefCompetences[] = $detailBriefCompetence;
-            $detailBriefCompetence->setBrief($this);
+        if (!$this->ressources->contains($ressource)) {
+            $this->ressources[] = $ressource;
+            $ressource->setBrief($this);
         }
 
         return $this;
     }
 
-    public function removeDetailBriefCompetence(DetailBriefCompetence $detailBriefCompetence): self
+    public function removeRessource(Ressource $ressource): self
     {
-        if ($this->detailBriefCompetences->contains($detailBriefCompetence)) {
-            $this->detailBriefCompetences->removeElement($detailBriefCompetence);
+        if ($this->ressources->contains($ressource)) {
+            $this->ressources->removeElement($ressource);
             // set the owning side to null (unless already changed)
-            if ($detailBriefCompetence->getBrief() === $this) {
-                $detailBriefCompetence->setBrief(null);
+            if ($ressource->getBrief() === $this) {
+                $ressource->setBrief(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Niveau[]
+     */
+    public function getNiveau(): Collection
+    {
+        return $this->niveau;
+    }
+
+    public function addNiveau(Niveau $niveau): self
+    {
+        if (!$this->niveau->contains($niveau)) {
+            $this->niveau[] = $niveau;
+        }
+
+        return $this;
+    }
+
+    public function removeNiveau(Niveau $niveau): self
+    {
+        if ($this->niveau->contains($niveau)) {
+            $this->niveau->removeElement($niveau);
         }
 
         return $this;

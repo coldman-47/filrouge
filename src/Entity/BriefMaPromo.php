@@ -49,9 +49,15 @@ class BriefMaPromo
      */
     private $briefApprenants;
 
+    /**
+     * @ORM\OneToMany(targetEntity=LivrablePartiel::class, mappedBy="BriefMapromo")
+     */
+    private $livrablePartiels;
+
     public function __construct()
     {
         $this->briefApprenants = new ArrayCollection();
+        $this->livrablePartiels = new ArrayCollection();
     }
 
     
@@ -110,6 +116,37 @@ class BriefMaPromo
             // set the owning side to null (unless already changed)
             if ($briefApprenant->getBriefmapromo() === $this) {
                 $briefApprenant->setBriefmapromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|LivrablePartiel[]
+     */
+    public function getLivrablePartiels(): Collection
+    {
+        return $this->livrablePartiels;
+    }
+
+    public function addLivrablePartiel(LivrablePartiel $livrablePartiel): self
+    {
+        if (!$this->livrablePartiels->contains($livrablePartiel)) {
+            $this->livrablePartiels[] = $livrablePartiel;
+            $livrablePartiel->setBriefMapromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivrablePartiel(LivrablePartiel $livrablePartiel): self
+    {
+        if ($this->livrablePartiels->contains($livrablePartiel)) {
+            $this->livrablePartiels->removeElement($livrablePartiel);
+            // set the owning side to null (unless already changed)
+            if ($livrablePartiel->getBriefMapromo() === $this) {
+                $livrablePartiel->setBriefMapromo(null);
             }
         }
 
