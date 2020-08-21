@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\RessourceRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\RessourceRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RessourceRepository::class)
@@ -14,26 +15,23 @@ class Ressource
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"briefs"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"briefs"})
      */
     private $libelle;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $type;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $piece_jointe;
-
-    /**
-     * @ORM\Column(type="string", length=255)
      */
     private $url;
 
@@ -42,6 +40,11 @@ class Ressource
      * @ORM\JoinColumn(nullable=false)
      */
     private $brief;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $pieceJointe;
 
     public function getId(): ?int
     {
@@ -72,18 +75,6 @@ class Ressource
         return $this;
     }
 
-    public function getPieceJointe(): ?string
-    {
-        return $this->piece_jointe;
-    }
-
-    public function setPieceJointe(?string $piece_jointe): self
-    {
-        $this->piece_jointe = $piece_jointe;
-
-        return $this;
-    }
-
     public function getUrl(): ?string
     {
         return $this->url;
@@ -104,6 +95,22 @@ class Ressource
     public function setBrief(?Brief $brief): self
     {
         $this->brief = $brief;
+
+        return $this;
+    }
+
+    public function getPieceJointe()
+    {
+        $pj = $this->pieceJointe;
+        if (!is_resource($pj)) {
+            return $pj;
+        }
+        return base64_encode(stream_get_contents($pj));
+    }
+
+    public function setPieceJointe($pieceJointe): self
+    {
+        $this->pieceJointe = $pieceJointe;
 
         return $this;
     }

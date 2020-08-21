@@ -60,7 +60,7 @@ class BriefMaPromo
         $this->livrablePartiels = new ArrayCollection();
     }
 
-    
+
 
     public function getId(): ?int
     {
@@ -152,6 +152,4 @@ class BriefMaPromo
 
         return $this;
     }
-
-    
 }
