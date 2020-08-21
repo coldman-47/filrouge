@@ -9,6 +9,7 @@ use App\Entity\BriefMaPromo;
 use App\Entity\Promo;
 use App\Repository\BriefRepository;
 use App\Repository\GroupeRepository;
+use App\Repository\PromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -62,19 +63,24 @@ class BriefController extends AbstractController
      *  }
      * )
      */
-    public function getBriefByGroupPromo(BriefRepository $repo, $id, $ID, SerializerInterface $serializer)
+    public function getBriefByGroupPromo(BriefRepository $repoBrief, $id, $ID, PromoRepository $repoPromo)
     {
-        $promo = $serializer->denormalize("api/admin/promos/$id/", Promo::class);
-        foreach ($promo->getGroupes() as $group) {
-            if ($group->getId() == $ID) {
-                break;
+        $promo = $repoPromo->find($id);
+        if (!empty($promo)) {
+            foreach ($promo->getGroupes() as $group) {
+                if ($group->getId() == $ID) {
+                    break;
+                }
+                $group = null;
             }
-            $group = null;
+            if (!empty($group)) {
+                foreach ($group->getEtatBriefs() as $etatBrief) {
+                    $briefs[] = $repoBrief->findOneBy(['id' => $etatBrief->getBrief()->getId()]);
+                }
+                return $this->json($briefs, 200, [], ["grous" => ["briefs"]]);
+            }
+            return new Response("Ce groupe n'éxiste pas!");
         }
-        foreach ($group->getEtatBriefs() as $etatBrief) {
-            $briefs[] = $repo->findOneBy(['id' => $etatBrief->getBrief()->getId()]);
-        }
-        return $this->json($briefs, 200, [], ["grous" => ["briefs"]]);
-        dd($briefs);
+        return new Response("Promo inéxistante!");
     }
 }
