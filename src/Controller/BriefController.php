@@ -35,19 +35,23 @@ class BriefController extends AbstractController
     {
         $briefTab = $request->request->All();
         $brief = $serializer->denormalize($briefTab, Brief::class);
-        foreach (explode(',', $briefTab['Groupe']) as $groupe) {
-            $etatBrief = new EtatBrief();
-            $briefMaPromo = new BriefMaPromo();
-            $group = $serializer->denormalize(trim($groupe), Groupe::class);
-            $groupes[] = $group;
-            $etatBrief->setGroupe($group);
-            $etatBrief->setStatut('En cours');
-            $brief->addEtatBrief($etatBrief);
-            $briefMaPromo->setPromo($group->getPromo());
-            $brief->addBriefMaPromo($briefMaPromo);
+        if (isset($briefTab['Groupe'])) {
+            foreach (explode(',', $briefTab['Groupe']) as $groupe) {
+                $etatBrief = new EtatBrief();
+                $briefMaPromo = new BriefMaPromo();
+                $group = $serializer->denormalize(trim($groupe), Groupe::class);
+                $groupes[] = $group;
+                $etatBrief->setGroupe($group);
+                $etatBrief->setStatut('En cours');
+                $brief->addEtatBrief($etatBrief);
+                $briefMaPromo->setPromo($group->getPromo());
+                $brief->addBriefMaPromo($briefMaPromo);
+            }
+            $brief->setEtat('Assigné');
+        } else {
+            $brief->setEtat('Brouillon');
         }
         $manager->persist($brief);
-        // dd($brief->getBriefMaPromos()[0]);
         $manager->flush();
         return new Response("success");
     }
@@ -65,6 +69,7 @@ class BriefController extends AbstractController
      */
     public function getBriefByGroupPromo(BriefRepository $repoBrief, $id, $ID, PromoRepository $repoPromo)
     {
+        $briefs = [];
         $promo = $repoPromo->find($id);
         if (!empty($promo)) {
             foreach ($promo->getGroupes() as $group) {
@@ -82,5 +87,59 @@ class BriefController extends AbstractController
             return new Response("Ce groupe n'éxiste pas!");
         }
         return new Response("Promo inéxistante!");
+    }
+
+    /**
+     * @Route(
+     * "/api/formateur/promo/{id}/briefs",
+     *  name="getBriefByPromo",
+     *  methods = {"GET"},
+     *  defaults={
+     *      "_api_resource_class" = Brief::class,
+     *      "_api_collection_operation_name" = "getBriefByPromo"
+     *  }
+     * )
+     */
+    public function getBriefByPromo(BriefRepository $repoBrief, $id, PromoRepository $repoPromo)
+    {
+        $briefs = [];
+        $promo = $repoPromo->find($id);
+        if (!empty($promo)) {
+            foreach ($promo->getBriefMaPromos() as $briefMaPromo) {
+                $briefs[] = $repoBrief->find($briefMaPromo->getBrief()->getId());
+            }
+            return $this->json($briefs, 200, [], ["grous" => ["briefs"]]);
+        }
+        return new Response("Promo inéxistante!");
+    }
+
+    /**
+     * @Route(
+     * "/api/formateur/promo/{id}/briefs/{status}",
+     *  name="getBriefByPromoStatus",
+     *  methods = {"GET"},
+     *  defaults={
+     *      "_api_resource_class" = Brief::class,
+     *      "_api_collection_operation_name" = "getBriefByPromoStatus"
+     *  }
+     * )
+     */
+    public function getBriefByPromoStatus(BriefRepository $repoBrief, $id, PromoRepository $repoPromo, $status)
+    {
+        $briefs = [];
+        if (in_array(strtolower($status), ["assigne", "brouillon", "valide"])) {
+            $promo = $repoPromo->find($id);
+            if (!empty($promo)) {
+                foreach ($promo->getBriefMaPromos() as $briefMaPromo) {
+                    $brief = $repoBrief->findOneBy(["id" => $briefMaPromo->getBrief()->getId(), "etat" => $status]);
+                    if (!empty($brief)) {
+                        $briefs[] = $brief;
+                    }
+                }
+                return $this->json($briefs, 200, [], ["groups" => ["briefs"]]);
+            }
+            return new Response("Promo inéxistante!");
+        }
+        return new Response("Accès refusé!");
     }
 }
