@@ -35,8 +35,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *      "enable_max_depth"=true
  *  },
  *  collectionOperations = {
- *      "get" = {
+ *      "getuser" = {
  *          "path" = "/admin/users/",
+ *          "deserialize" = false
  *      },
  *      "post_user" = {
  *          "deserialize" = false
@@ -58,13 +59,13 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read"})
+     * @Groups({"profil:read","promo:read_All"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups({"profil_sortie"})
+     * @Groups({"profil_sortie","promo:read_All"})
      */
     private $username;
 
@@ -81,13 +82,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read"})
+     * @Groups({"profil:read","promo:read_All"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read"})
+     * @Groups({"profil:read","promo:read_All"})
      */
     private $nom;
 
@@ -114,6 +115,22 @@ class User implements UserInterface
      * @Groups({"profil:read"})
      */
     private $profil;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * * @Groups({"profil:read"})
+     */
+    private $deleted;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="user")
+     */
+    private $chats;
+
+    public function __construct()
+    {
+        $this->chats = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -271,6 +288,49 @@ class User implements UserInterface
     public function setAvatarType($avatarType)
     {
         $this->avatarType = $avatarType;
+
+        return $this;
+    }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(?bool $deleted): self
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chat[]
+     */
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
+
+    public function addChat(Chat $chat): self
+    {
+        if (!$this->chats->contains($chat)) {
+            $this->chats[] = $chat;
+            $chat->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChat(Chat $chat): self
+    {
+        if ($this->chats->contains($chat)) {
+            $this->chats->removeElement($chat);
+            // set the owning side to null (unless already changed)
+            if ($chat->getUser() === $this) {
+                $chat->setUser(null);
+            }
+        }
 
         return $this;
     }

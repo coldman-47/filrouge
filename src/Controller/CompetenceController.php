@@ -32,13 +32,15 @@ class CompetenceController extends AbstractController
     {
         $grpCompeTab = json_decode($request->getContent(), true);
         $competencesTab = $grpCompeTab['competences'];
-        foreach ($competencesTab as $k => $competence) {
-            $competences[] = $serializer->denormalize($competence, Competence::class);
+        foreach ($competencesTab as $competence) {
+            $cmpt = $serializer->denormalize($competence, Competence::class);
+            $levels = $cmpt->getNiveaux();
             foreach ($competence['niveaux'] as $level => $niveau) {
                 $niveau['niveau'] = $level + 1;
-                $niveaux[] = $serializer->denormalize($niveau, Niveau::class);
-                $niveaux[$level]->setCompetence($competences[$k]);
+                $levels[$level] = $serializer->denormalize($niveau, Niveau::class);
+                $levels[$level]->setCompetence($cmpt);
             }
+            $competences[] = $cmpt;
         }
 
         $grpCompetences = $serializer->denormalize($grpCompeTab, GroupeCompetence::class);
@@ -48,10 +50,6 @@ class CompetenceController extends AbstractController
             $competence->addGroupeCompetence($grpCompetences);
             $manager->persist($competence);
         }
-        foreach ($niveaux as $niveau) {
-            $manager->persist($niveau);
-        }
-
         $manager->persist($grpCompetences);
         $manager->flush();
 

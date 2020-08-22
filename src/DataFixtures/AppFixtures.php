@@ -2,12 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Apprenant;
+
 use App\Entity\CM;
-use App\Entity\Formateur;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Profil;
+use App\Entity\Apprenant;
+use App\Entity\Formateur;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;

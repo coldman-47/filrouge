@@ -12,7 +12,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
  * @ORM\Entity(repositoryClass=ApprenantRepository::class)
  * @ApiResource(
  *  collectionOperations = {
- *      "get" = {
+ *      "getapprenant" = {
+ *          "method"="get",
  *          "path" = "/admin/apprenants"
  *      }
  *  },
@@ -60,10 +61,31 @@ class Apprenant extends User
      */
     private $groupes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="apprenant")
+     */
+    private $briefApprenants;
+
+
+    /**
+     * @ORM\OneToMany(targetEntity=CompetenceValide::class, mappedBy="apprenant")
+     */
+    private $competenceValides;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ApprenantLivrablePartiel::class, mappedBy="apprenant")
+     */
+    private $apprenantLivrablePartiels;
+
+    
+
     public function __construct()
     {
         $this->profilSorties = new ArrayCollection();
         $this->groupes = new ArrayCollection();
+        $this->briefApprenants = new ArrayCollection();
+        $this->competenceValides = new ArrayCollection();
+        $this->apprenantLivrablePartiels = new ArrayCollection();
     }
 
     public function getGenre(): ?string
@@ -175,6 +197,100 @@ class Apprenant extends User
     {
         if ($this->groupes->contains($groupe)) {
             $this->groupes->removeElement($groupe);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|BriefApprenant[]
+     */
+    public function getBriefApprenants(): Collection
+    {
+        return $this->briefApprenants;
+    }
+
+    public function addBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if (!$this->briefApprenants->contains($briefApprenant)) {
+            $this->briefApprenants[] = $briefApprenant;
+            $briefApprenant->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefApprenant(BriefApprenant $briefApprenant): self
+    {
+        if ($this->briefApprenants->contains($briefApprenant)) {
+            $this->briefApprenants->removeElement($briefApprenant);
+            // set the owning side to null (unless already changed)
+            if ($briefApprenant->getApprenant() === $this) {
+                $briefApprenant->setApprenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return Collection|CompetenceValide[]
+     */
+    public function getCompetenceValides(): Collection
+    {
+        return $this->competenceValides;
+    }
+
+    public function addCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if (!$this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides[] = $competenceValide;
+            $competenceValide->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if ($this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides->removeElement($competenceValide);
+            // set the owning side to null (unless already changed)
+            if ($competenceValide->getApprenant() === $this) {
+                $competenceValide->setApprenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ApprenantLivrablePartiel[]
+     */
+    public function getApprenantLivrablePartiels(): Collection
+    {
+        return $this->apprenantLivrablePartiels;
+    }
+
+    public function addApprenantLivrablePartiel(ApprenantLivrablePartiel $apprenantLivrablePartiel): self
+    {
+        if (!$this->apprenantLivrablePartiels->contains($apprenantLivrablePartiel)) {
+            $this->apprenantLivrablePartiels[] = $apprenantLivrablePartiel;
+            $apprenantLivrablePartiel->setApprenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApprenantLivrablePartiel(ApprenantLivrablePartiel $apprenantLivrablePartiel): self
+    {
+        if ($this->apprenantLivrablePartiels->contains($apprenantLivrablePartiel)) {
+            $this->apprenantLivrablePartiels->removeElement($apprenantLivrablePartiel);
+            // set the owning side to null (unless already changed)
+            if ($apprenantLivrablePartiel->getApprenant() === $this) {
+                $apprenantLivrablePartiel->setApprenant(null);
+            }
         }
 
         return $this;

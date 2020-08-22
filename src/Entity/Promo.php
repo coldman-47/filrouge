@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * subresourceOperations={
  *          "getPromo_ref"={
  *              "method"="GET",
- *              "path"="/admin/promos/{id}/referentiels"
+ *              "path"="/admin/promo/{id}/referentiels"
  *          },
  * },
  * attributes = {
@@ -27,16 +27,26 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  collectionOperations = {
  *      "get" = {
  *          "path" = "/admin/promos/",
- *           
+
  *      },
- *      "add_promo" = {
+ *     "add_promo" = {
  *          "method" = "post",
  *          "path" = "/admin/promos/",
  *          "deserialize" = false,
+ *      },
+ *      "promo_list" = {
+ *          "method" = "get",
+ *          "path" = "api/admin/promo/apprenants/attente",
+ *           "normalization_context"={"groups"={"promo:read_All"}},
+ *           
+ *      },
+ *      "App_attente" = {
+ *          "method" = "get",
+ *          "path" = "/admin/promo/principal",
+ *           "normalization_context"={"groups"={"promo:read_Attente"}},
+ *           
  *      }
  *  },
- * 
- * 
  *  itemOperations = {
  *      "get" = {
  *          "path" = "/admin/promos/{id}/",
@@ -56,82 +66,105 @@ class Promo
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
+     *
      */
     private $lieu;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $ReferenceAgate;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $fabrique;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="date")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $dateFin;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $titre;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Groupe::class, mappedBy="promo")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      */
     private $groupes;
 
     /**
      * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
      * 
      */
     private $referentil_promo;
 
     /**
      * @ORM\ManyToMany(targetEntity=Formateur::class, inversedBy="promos")
-     * @Groups({"promo:read"})
+     * @Groups({"promo:read","promo:read_All"})
      */
     private $formateur;
+
+    /**
+     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="promo")
+     */
+    private $briefMaPromos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CompetenceValide::class, mappedBy="promo")
+     */
+    private $competenceValides;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="promo")
+     */
+    private $chats;
+
+    
 
     public function __construct()
     {
         $this->groupes = new ArrayCollection();
         $this->referentil_promo = new ArrayCollection();
         $this->formateur = new ArrayCollection();
+        $this->briefMaPromos = new ArrayCollection();
+        $this->competenceValides = new ArrayCollection();
+        $this->chats = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -317,4 +350,99 @@ class Promo
 
         return $this;
     }
+
+    /**
+     * @return Collection|BriefMaPromo[]
+     */
+    public function getBriefMaPromos(): Collection
+    {
+        return $this->briefMaPromos;
+    }
+
+    public function addBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if (!$this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos[] = $briefMaPromo;
+            $briefMaPromo->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBriefMaPromo(BriefMaPromo $briefMaPromo): self
+    {
+        if ($this->briefMaPromos->contains($briefMaPromo)) {
+            $this->briefMaPromos->removeElement($briefMaPromo);
+            // set the owning side to null (unless already changed)
+            if ($briefMaPromo->getPromo() === $this) {
+                $briefMaPromo->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CompetenceValide[]
+     */
+    public function getCompetenceValides(): Collection
+    {
+        return $this->competenceValides;
+    }
+
+    public function addCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if (!$this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides[] = $competenceValide;
+            $competenceValide->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompetenceValide(CompetenceValide $competenceValide): self
+    {
+        if ($this->competenceValides->contains($competenceValide)) {
+            $this->competenceValides->removeElement($competenceValide);
+            // set the owning side to null (unless already changed)
+            if ($competenceValide->getPromo() === $this) {
+                $competenceValide->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Chat[]
+     */
+    public function getChats(): Collection
+    {
+        return $this->chats;
+    }
+
+    public function addChat(Chat $chat): self
+    {
+        if (!$this->chats->contains($chat)) {
+            $this->chats[] = $chat;
+            $chat->setPromo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChat(Chat $chat): self
+    {
+        if ($this->chats->contains($chat)) {
+            $this->chats->removeElement($chat);
+            // set the owning side to null (unless already changed)
+            if ($chat->getPromo() === $this) {
+                $chat->setPromo(null);
+            }
+        }
+
+        return $this;
+    }
+
+   
 }

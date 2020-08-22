@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Profil;
 use App\Entity\Apprenant;
+use App\Main;
 use App\Repository\UserRepository;
 use App\Repository\ApprenantRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +20,22 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends AbstractController
 {
+    /**
+     * @Route(
+     *  "/api/admin/users/",
+     *  name="getuser",
+     *  methods = {"GET"},
+     *  defaults={
+     *      "_api_resource_class" = User::class,
+     *      "_api_collection_operation_name" = "getuser"
+     *  }
+     * )
+     */
+    public function getUsers(UserRepository $repo, Main $method)
+    {
+        return ($method->getAll($repo));
+    }
+
     /**
      * @Route(
      *  "/api/admin/users/",
@@ -51,5 +68,4 @@ class UserController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
-    
 }

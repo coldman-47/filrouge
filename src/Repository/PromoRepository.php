@@ -47,4 +47,13 @@ class PromoRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findAppPromoPrincipal(Type $var = null)
+    {
+        return $this->createQueryBuilder('p')
+        ->andWhere('p.exampleField = :val')
+        ->setParameter('val', $value)
+        ->getQuery()
+        ->getOneOrNullResult()
+    ;
+    }
 }
