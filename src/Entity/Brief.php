@@ -2,21 +2,32 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\BriefRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BriefRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- * collectionOperations = {
+ *  collectionOperations = {
+ *      "getBriefs" = {
+ *          "method" = "get",
+ *          "path" = "/formateur/briefs/",
+ *          "normalization_context" = {"groups" = {"briefs"}}
+ *      },
+ *      "getBriefByGroupPromo"={
+ *          "method" = "get",
+ *          "path"="/formateur/promo/{id}/groupe/{ID}/briefs",
+ *          "deserialize" = false
+ *      },
  *      "add_brief" = {
  *          "method" = "post",
- *          "path" = "/admin/brief/",
+ *          "path" = "/formateur/brief/",
  *          "deserialize"=false
- *      },
- * }
+ *      }
+ *  }
  * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)
  */
@@ -26,16 +37,19 @@ class Brief
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"briefs"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"briefs"})
      */
     private $langue;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"briefs"})
      */
     private $nomBrief;
 
@@ -61,6 +75,7 @@ class Brief
 
     /**
      * @ORM\Column(type="blob",nullable=true)
+     * @Groups({"briefs"})
      */
     private $imagePromo;
 
@@ -76,6 +91,7 @@ class Brief
 
     /**
      * @ORM\Column(type="string", length=255,nullable=true)
+     * @Groups({"briefs"})
      */
     private $etat;
 
@@ -85,27 +101,32 @@ class Brief
     private $formateur;
 
     /**
-     * @ORM\OneToMany(targetEntity=EtatBrief::class, mappedBy="brief")
+     * @ORM\OneToMany(targetEntity=EtatBrief::class, mappedBy="brief", cascade={"persist"})
+     * @Groups({"briefs"})
      */
     private $etatBriefs;
 
     /**
-     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="brief")
+     * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="brief", cascade={"persist"})
+     * @Groups({"briefs"})
      */
     private $briefMaPromos;
 
     /**
      * @ORM\OneToMany(targetEntity=BriefLivrable::class, mappedBy="brief")
+     * @Groups({"briefs"})
      */
     private $briefLivrables;
 
     /**
      * @ORM\OneToMany(targetEntity=Ressource::class, mappedBy="brief")
+     * @Groups({"briefs"})
      */
     private $ressources;
 
     /**
      * @ORM\ManyToMany(targetEntity=Niveau::class, inversedBy="briefs")
+     * @Groups({"briefs"})
      */
     private $niveau;
 
@@ -114,10 +135,9 @@ class Brief
         $this->etatBriefs = new ArrayCollection();
         $this->briefMaPromos = new ArrayCollection();
         $this->briefLivrables = new ArrayCollection();
-        
+
         $this->ressources = new ArrayCollection();
         $this->niveau = new ArrayCollection();
-       
     }
 
     public function getId(): ?int
@@ -199,7 +219,11 @@ class Brief
 
     public function getImagePromo()
     {
-        return $this->imagePromo;
+        $ip = $this->imagePromo;
+        if (!is_resource($ip)) {
+            return $ip;
+        }
+        return base64_encode(stream_get_contents($ip));
     }
 
     public function setImagePromo($imagePromo): self
@@ -350,7 +374,7 @@ class Brief
         return $this;
     }
 
-    
+
     /**
      * @return Collection|Ressource[]
      */
@@ -407,6 +431,4 @@ class Brief
 
         return $this;
     }
-
-    
 }
