@@ -72,4 +72,49 @@ class TagController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+    
+    /**
+     * @Route(
+     * "/api/admin/grptags/{id}/",
+     *  name="update_groupetag",
+     *  methods={"PUT"},
+     *  defaults={
+     *      "_api_resource_class" = GroupeTag::class,
+     *      "_api_item_operation_name" = "update_groupetags"
+     *      }
+     *    )
+     */
+    public function updateGroupeTag(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager)
+    {
+        //Récuperation de l'objet dans la base de données
+        $grptag = $request->attributes->get("data");
+        //récuperation de l'objet à modifier dans le body
+        $grptag_update = json_decode($request->getContent(), true);
+ 
+         foreach ($grptag_update as $key => $value) {
+             
+             if($key==="Tag" || $key === "dropTag"){
+                 
+                 $setter = "add".ucfirst($key);
+                 if ($key === "dropTag") {
+                     
+                     $setter = "removeTag";
+                 }
+                 foreach ($value as $val) {
+                     
+                     $val = $serializer->denormalize($val, Tag::class);
+                     $grptag->$setter($val);
+                 }
+             }else{
+                 
+                 $setter = "set".ucfirst($key);
+                 $grptag->$setter($value);
+             }
+         }
+        $manager->persist($grptag);
+        $manager->flush();
+ 
+        return new JsonResponse("success", Response::HTTP_CREATED, [], true);
+       
+    }
 }

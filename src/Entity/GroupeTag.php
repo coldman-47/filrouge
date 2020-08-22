@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=GroupeTagRepository::class)
  * @ApiResource(
  * attributes = {
- *      "security" = "is_granted('ROLE_ADMIN')",
+ *      "security" = "is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR')",
  *      "security_message" = "Vous n'avez pas accès à cette ressource"
  *  },
  *  collectionOperations = {
@@ -29,9 +29,11 @@ use Doctrine\ORM\Mapping as ORM;
  *      "get" = {
  *          "path" = "/admin/grptags/{id}/"
  *      },
- *      "put" = {
- *          "path" = "/admin/grptags/{id}/"
- *      }
+ *      "update_groupetags" = {
+ *          "method" = "put",
+ *          "path" = "/admin/tags/{id}/",
+*           "deserialize" = false
+ *      },
  *  }
  * )
  */

@@ -12,6 +12,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @ORM\Entity(repositoryClass=TagRepository::class)
  * @ApiResource(
+ *   attributes = {
+ *      "security" = "is_granted('ROLE_ADMIN') or is_granted('ROLE_FORMATEUR')",
+ *      "security_message" = "Vous n'avez pas accès à cette ressource"
+ *  },
  *  collectionOperations = {
  *      "get" = {
  *          "path" = "/admin/tags/"
@@ -22,15 +26,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  *      }
  *  },
  *  itemOperations = {
+*       "put" = {
+ *          "path" = "/admin/tags/{id}/"
+ *      },
  *      "get" = {
  *          "path" = "/admin/tags/{id}/"
  *      },
- *      "put" = {
- *          "path" = "/admin/tags/{id}/"
- *      },
- *      "delete" = {
- *          "path" = "/admin/tags/{id}/"
- *      }
  *  }
  * )
  */
