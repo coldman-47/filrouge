@@ -70,7 +70,7 @@ class CompetenceController extends AbstractController
     public function addCompetence(Request $request, SerializerInterface $serializer, EntityManagerInterface $manager, GroupeCompetenceRepository $repo)
     {
         $competenceTab = json_decode($request->getContent(), true);
-
+       
         $grpCompetences = $repo->findOneBy(['libelle' => $competenceTab["grpCompetences"]]);
 
         $competence = $serializer->denormalize($competenceTab, Competence::class);
