@@ -27,6 +27,13 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "path" = "/formateur/brief/",
  *          "deserialize"=false
  *      }
+ *  },
+ * itemOperations = {
+ *      "getOneBriefByPromo" = {
+ *          "method" = "get",
+ *          "path" = "/formateur/promo/{id}/briefs/{$ID}",
+ *          "deserialize" = false
+ *      }
  *  }
  * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)

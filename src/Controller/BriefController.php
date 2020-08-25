@@ -8,6 +8,7 @@ use App\Entity\EtatBrief;
 use App\Entity\BriefMaPromo;
 use App\Entity\Promo;
 use App\Repository\BriefRepository;
+use App\Repository\FormateurRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\PromoRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +38,7 @@ class BriefController extends AbstractController
         $brief = $serializer->denormalize($briefTab, Brief::class);
         if (isset($briefTab['Groupe'])) {
             foreach (explode(',', $briefTab['Groupe']) as $groupe) {
+                //etaBrief = etatBriefGroup
                 $etatBrief = new EtatBrief();
                 $briefMaPromo = new BriefMaPromo();
                 $group = $serializer->denormalize(trim($groupe), Groupe::class);
@@ -82,7 +84,7 @@ class BriefController extends AbstractController
                 foreach ($group->getEtatBriefs() as $etatBrief) {
                     $briefs[] = $repoBrief->findOneBy(['id' => $etatBrief->getBrief()->getId()]);
                 }
-                return $this->json($briefs, 200, [], ["grous" => ["briefs"]]);
+                return $this->json($briefs, 200, [], ["groups" => ["briefs"]]);
             }
             return new Response("Ce groupe n'éxiste pas!");
         }
@@ -115,7 +117,7 @@ class BriefController extends AbstractController
 
     /**
      * @Route(
-     * "/api/formateur/promo/{id}/briefs/{status}",
+     * "/api/formateur/{id}/briefs/{status}",
      *  name="getBriefByPromoStatus",
      *  methods = {"GET"},
      *  defaults={
@@ -124,16 +126,18 @@ class BriefController extends AbstractController
      *  }
      * )
      */
-    public function getBriefByPromoStatus(BriefRepository $repoBrief, $id, PromoRepository $repoPromo, $status)
+    public function getBriefByPromoStatus(BriefRepository $repoBrief, $id, FormateurRepository $repoFormateur, $status)
     {
         $briefs = [];
-        if (in_array(strtolower($status), ["assigne", "brouillon", "valide"])) {
-            $promo = $repoPromo->find($id);
-            if (!empty($promo)) {
-                foreach ($promo->getBriefMaPromos() as $briefMaPromo) {
-                    $brief = $repoBrief->findOneBy(["id" => $briefMaPromo->getBrief()->getId(), "etat" => $status]);
-                    if (!empty($brief)) {
-                        $briefs[] = $brief;
+        if (in_array(strtolower($status), ["assigne", "brouillon"])) {
+            $formateur = $repoFormateur->find($id);
+            if (!empty($formateur)) {
+                foreach ($formateur->getGroupe() as $group) {
+                    foreach ($group->getEtatBriefs() as $etatBrief) {
+                        $brief = $repoBrief->findBy(['id' => $etatBrief->getBrief()->getId(), 'etat' => $status]);
+                        if (!empty($brief)) {
+                            $briefs[] = $brief;
+                        }
                     }
                 }
                 return $this->json($briefs, 200, [], ["groups" => ["briefs"]]);
@@ -141,5 +145,29 @@ class BriefController extends AbstractController
             return new Response("Promo inéxistante!");
         }
         return new Response("Accès refusé!");
+    }
+
+    /**
+     * @Route(
+     * "/api/formateur/promo/{id}/briefs/{ID}",
+     *  name="getOneBriefByPromo",
+     *  methods = {"GET"}
+     * )
+     */
+    public function getOneBriefByPromo(BriefRepository $repoBrief, $id, $ID, PromoRepository $repoPromo)
+    {
+        $promo = $repoPromo->find($id);
+        if (!empty($promo)) {
+            foreach ($promo->getBriefMaPromos() as $briefMaPromo) {
+                if ($briefMaPromo->getBrief()->getId() == $ID) {
+                    $brief = $repoBrief->find($ID);
+                    return $this->json($brief, 200, [], ["groups" => ["briefs"]]);
+                }
+            }
+            if (!isset($brief)) {
+                return new Response("Brief inéxistant!");
+            }
+        }
+        return new Response("Promo inéxistante!");
     }
 }
