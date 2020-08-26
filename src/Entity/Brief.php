@@ -29,10 +29,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      }
  *  },
  * itemOperations = {
+ *      "get",
  *      "getOneBriefByPromo" = {
  *          "method" = "get",
- *          "path" = "/formateur/promo/{id}/briefs/{$ID}",
- *          "deserialize" = false
+ *          "path" = "/formateur/promo/{id}/briefs/{ID}",
+ *          "deserialize" = false,
  *      }
  *  }
  * )
@@ -50,7 +51,7 @@ class Brief
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Groups({"briefs"})
+     * @Groups({"briefs", "formbrief"})
      */
     private $langue;
 
@@ -104,6 +105,7 @@ class Brief
 
     /**
      * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="briefs")
+     * Groups({"briefs"})
      */
     private $formateur;
 

@@ -10,7 +10,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=FormateurRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ * itemOperations = {
+ *      "get" = {
+ *          "path" = "/admin/formateurs/{id}"
+ *      }
+ *  }
+ * )
  */
 class Formateur extends User
 {
