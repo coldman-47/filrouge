@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ChatRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=ChatRepository::class)
+ * @ApiResource()
  */
 class Chat
 {
@@ -14,30 +17,40 @@ class Chat
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"chat:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"chat:read"})
      */
     private $message;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"chat:read"})
      */
     private $pieceJointe;
 
     /**
      * @ORM\ManyToOne(targetEntity=Promo::class, inversedBy="chats")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"chat:read"})
      */
     private $promo;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="chats")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"chat:read"})
      */
     private $user;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $dateEnvoi;
 
     public function getId(): ?int
     {
@@ -91,4 +104,17 @@ class Chat
 
         return $this;
     }
+
+    public function getDateEnvoi(): ?\DateTimeInterface
+    {
+        return $this->dateEnvoi;
+    }
+
+    public function setDateEnvoi(?\DateTimeInterface $dateEnvoi): self
+    {
+        $this->dateEnvoi = $dateEnvoi;
+
+        return $this;
+    }
+
 }

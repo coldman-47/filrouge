@@ -25,9 +25,26 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      "security_message" = "Vous n'avez pas accès à cette ressource"
  *  },
  *  collectionOperations = {
+ *      "chat_post" = {
+ *          "method" = "POST",
+ *          "path" = "/users/promo/{id}/apprenant/{id1}/chats",
+ *          "deserialize" = false
+ *      },
+ *      "chat_get" = {
+ *          "method" = "GET",
+ *          "path" = "/users/promo/{id}/apprenant/{id1}/chats",
+ *          "deserialize" = false
+ *      },
+ *      "profil_sortie_by_id" = {
+ *          "path" = "/admin/promo/{id}/profilsortie/{id1}",
+ *          "method" = "GET"
+ *      },
+ *      "profil_sorties_by_id" = {
+ *          "path" = "/admin/promo/{id}/profilsorties",
+ *          "method" = "GET"
+ *      },
  *      "get" = {
  *          "path" = "/admin/promos/",
-
  *      },
  *     "add_promo" = {
  *          "method" = "post",

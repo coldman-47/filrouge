@@ -59,7 +59,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read","promo:read_All"})
+     * @Groups({"profil:read","promo:read_All","chat:read"})
      */
     private $id;
 
@@ -118,12 +118,13 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * * @Groups({"profil:read"})
+     * @Groups({"profil:read"})
      */
     private $deleted;
 
     /**
      * @ORM\OneToMany(targetEntity=Chat::class, mappedBy="user")
+     * @groups({"chat:read"})
      */
     private $chats;
 

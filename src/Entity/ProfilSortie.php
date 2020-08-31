@@ -10,7 +10,25 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=ProfilSortieRepository::class)
- * @ApiResource()
+ * @ApiResource(
+ * 
+ * collectionOperations = {
+ *          "get" = {
+ *                  "path" = "/admin/profilsorties",
+ *          },
+ *          "post" = {
+ *                  "path" = "/admin/profilsorties",
+ *          },
+ * },
+ * itemOperations = {
+ *           "get" = {
+ *                  "path" = "/admin/profilsortie/{id}",
+ *          },
+ *          "put" = {
+ *                  "path" = "/admin/profilsortie/{id}",
+ *          },
+ * }
+ * )
  */
 class ProfilSortie
 {
