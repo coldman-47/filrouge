@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Constraints\Json;
 
 class BriefController extends AbstractController
@@ -38,11 +40,11 @@ class BriefController extends AbstractController
         $brief = $serializer->denormalize($briefTab, Brief::class);
         if (isset($briefTab['Groupe'])) {
             foreach (explode(',', $briefTab['Groupe']) as $groupe) {
-                //etaBrief = etatBriefGroup
+                // création nouvelle instance d'association entre brief et groupe
                 $etatBrief = new EtatBrief();
+                // création nouvelle instance d'association entre brief et promo
                 $briefMaPromo = new BriefMaPromo();
                 $group = $serializer->denormalize(trim($groupe), Groupe::class);
-                $groupes[] = $group;
                 $etatBrief->setGroupe($group);
                 $etatBrief->setStatut('En cours');
                 $brief->addEtatBrief($etatBrief);
@@ -55,7 +57,7 @@ class BriefController extends AbstractController
         }
         $manager->persist($brief);
         $manager->flush();
-        return new Response("success");
+        return new JsonResponse("Success", 200);
     }
 
     /**
@@ -152,13 +154,13 @@ class BriefController extends AbstractController
      *  methods = {"GET"}
      * )
      */
-    public function getOneBriefByPromo(BriefRepository $repoBrief, $id, $ID, PromoRepository $repoPromo)
+    public function getOneBriefByPromo(SerializerInterface $normalizer, $id, $ID, PromoRepository $repoPromo)
     {
         $promo = $repoPromo->find($id);
         if (!empty($promo)) {
             foreach ($promo->getBriefMaPromos() as $briefMaPromo) {
                 if ($briefMaPromo->getBrief()->getId() == $ID) {
-                    $brief = $repoBrief->find($ID);
+                    $brief = $briefMaPromo->getBrief();
                     return $this->json($brief, 200, [], ["groups" => ["briefs"]]);
                 }
             }

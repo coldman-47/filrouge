@@ -26,15 +26,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "method" = "post",
  *          "path" = "/formateur/brief/",
  *          "deserialize"=false
+ *      },
+ *      "getBriefByPromo" = {
+ *          "method" = "get",
+ *          "path" = "formateur/promo/{id}/briefs",
+ *          "deserialize"=false
  *      }
  *  },
  * itemOperations = {
  *      "get",
- *      "getOneBriefByPromo" = {
- *          "method" = "get",
- *          "path" = "/formateur/promo/{id}/briefs/{ID}",
- *          "deserialize" = false,
- *      }
  *  }
  * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)
@@ -105,7 +105,7 @@ class Brief
 
     /**
      * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="briefs")
-     * Groups({"briefs"})
+     * @Groups({"briefs"})
      */
     private $formateur;
 

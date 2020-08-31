@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ApiResource(
  *  collectionOperations = {
  *      "getreferentiel" = {
+ *          "method" = "get",
  *          "path" = "/admin/referentiels/"
  *      },
  *      "addreferentiel" = {
