@@ -65,6 +65,7 @@ class PromoController extends AbstractController
 
         return new JsonResponse("success", Response::HTTP_CREATED, [], true);
     }
+
     /**
      * @Route(
      * name="promo_list",
@@ -76,7 +77,6 @@ class PromoController extends AbstractController
      * }
      * )
      */
-
     public function getpromotion(SerializerInterface $serializer, PromoRepository $repo)
     {
         $promos = $repo->findAll();
@@ -104,17 +104,15 @@ class PromoController extends AbstractController
      * }
      * )
      */
-
     public function getAppAttente(SerializerInterface $serializer, PromoRepository $repo)
     {
         $promos = $repo->findAll();
         foreach ($promos as $promo) {
             foreach ($promo->getGroupes() as $g) {
-                foreach($g->getApprenant() as $app){
+                foreach ($g->getApprenant() as $app) {
                     if ($app->getAttente() == false) {
                         $g->removeApprenant($app);
                     }
-                   
                 }
             }
         }

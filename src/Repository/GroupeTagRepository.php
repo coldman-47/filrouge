@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\GrpTag;
+use App\Entity\GroupeTag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method GrpTag|null find($id, $lockMode = null, $lockVersion = null)
- * @method GrpTag|null findOneBy(array $criteria, array $orderBy = null)
- * @method GrpTag[]    findAll()
- * @method GrpTag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method GroupeTag|null find($id, $lockMode = null, $lockVersion = null)
+ * @method GroupeTag|null findOneBy(array $criteria, array $orderBy = null)
+ * @method GroupeTag[]    findAll()
+ * @method GroupeTag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class GrpTagRepository extends ServiceEntityRepository
+class GroupeTagRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GrpTag::class);
+        parent::__construct($registry, GroupeTag::class);
     }
 
     // /**
-    //  * @return GrpTag[] Returns an array of GrpTag objects
+    //  * @return GroupeTag[] Returns an array of GroupeTag objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class GrpTagRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?GrpTag
+    public function findOneBySomeField($value): ?GroupeTag
     {
         return $this->createQueryBuilder('g')
             ->andWhere('g.exampleField = :val')

@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * 
  *  collectionOperations = {
  *      "getreferentiel" = {
+ *          "method" = "get",
  *          "path" = "/admin/referentiels/"
  *      },
  *      "addreferentiel" = {
