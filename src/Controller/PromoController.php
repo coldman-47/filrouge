@@ -31,7 +31,7 @@ class PromoController extends AbstractController
      */
     public function addpromo(Request $request, GroupeRepository $repo, SerializerInterface $serializer, EntityManagerInterface $manager)
     {
-
+        
         $promoTab = json_decode($request->getContent(), true);
         $groupeTab = $promoTab['groupes'];
         foreach ($groupeTab as $groupe) {

@@ -8,6 +8,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\GroupeCompetenceRepository;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=GroupeCompetenceRepository::class)
@@ -38,17 +39,21 @@ class GroupeCompetence
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"grp"})
+     * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     *  @Groups({"grp"})
      */
     private $libelle;
 
     /**
      * @ORM\ManyToMany(targetEntity=Competence::class, inversedBy="groupeCompetences")
      * @ApiSubresource()
+     * @Groups({"promo:form","grp"})
      */
     private $competence;
 
