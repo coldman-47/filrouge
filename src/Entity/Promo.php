@@ -38,8 +38,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *          "method" = "get",
  *          "path" = "api/admin/promo/apprenants/attente",
  *           "normalization_context"={"groups"={"promo:read_All"}},
- *           
  *      },
+ *      
  *      "App_attente" = {
  *          "method" = "get",
  *          "path" = "/admin/promo/principal",
@@ -55,7 +55,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      "put" = {
  *          "path" = "/admin/promos/{id}/"
  *      },
- *      
+ *      "form_promo_ref_comp" = {
+ *          "method" = "get",
+ *          "path" = "/formateurs/promo/{id}/referentiels/",
+ *          "normalization_context"={"groups"={"promo:form"}}  
+ *      },
  *  }
  * )
  * @ORM\Entity(repositoryClass=PromoRepository::class)
@@ -66,14 +70,14 @@ class Promo
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente","promo:form"})
      * 
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente","promo:form"})
      *
      */
     private $lieu;
@@ -86,7 +90,7 @@ class Promo
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente","promo:form"})
      */
     private $fabrique;
 
@@ -128,7 +132,7 @@ class Promo
 
     /**
      * @ORM\ManyToMany(targetEntity=Referentiel::class, inversedBy="promos")
-     * @Groups({"promo:read","promo:read_All","promo:read_Attente"})
+     * @Groups({"promo:read","promo:read_All","promo:read_Attente","promo:form"})
      * 
      */
     private $referentil_promo;

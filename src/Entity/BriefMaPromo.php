@@ -45,7 +45,7 @@ class BriefMaPromo
     private $promo;
 
     /**
-     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="briefmapromo")
+     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="briefMapromo")
      */
     private $briefApprenants;
 

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\NiveauRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\NiveauRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=NiveauRepository::class)
@@ -16,11 +17,13 @@ class Niveau
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"promo_cmpt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"promo_cmpt"})
      */
     private $niveau;
 

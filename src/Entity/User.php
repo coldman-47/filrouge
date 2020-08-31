@@ -59,7 +59,7 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"profil:read","promo:read_All"})
+     * @Groups({"profil:read","promo:read_All","brief_read"})
      */
     private $id;
 
@@ -82,19 +82,19 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","promo:read_All"})
+     * @Groups({"profil:read","promo:read_All","brief_read"})
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"profil:read","promo:read_All"})
+     * @Groups({"profil_sortie","promo:read_All","brief_read"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"profil:read"})
+     * @Groups({"profil:read","brief_read"})
      */
     private $email;
 
