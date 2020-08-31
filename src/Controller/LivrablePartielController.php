@@ -124,6 +124,7 @@ class LivrablePartielController extends AbstractController
             if(($promo->getId() == $idp) && ($apprenant->getId() == $id)){
                 $competence = $stat->getCompetence();
                 $competenceTab = $serializer->normalize($competence,'json',["groups"=>"competence:read"]);
+                
                 $tab[] = ["competence"=>$competenceTab];
             }
         }
@@ -273,6 +274,7 @@ class LivrablePartielController extends AbstractController
     {
         if ( $this->isGranted('ROLE_ADMIN') || $this->isGranted('ROLE_FORMATEUR') ) {
         $json = json_decode($request->getContent());
+        dd($json);
         $promo=$repoPromo->find($idp);
         $brief=$repoBrief->find($idb);
         $livrableP=$repoLV->findAll();
