@@ -36,10 +36,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *  },
  *  collectionOperations = {
  *      "getuser" = {
+ *          "method" = "get",
  *          "path" = "/admin/users/",
  *          "deserialize" = false
  *      },
  *      "post_user" = {
+ *          "method" = "post",
  *          "deserialize" = false
  *      }
  *  },
