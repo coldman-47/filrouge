@@ -71,8 +71,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      "put" = {
  *          "path" = "/admin/promos/{id}/"
- *      },
- *      
+ *      }
  *  }
  * )
  * @ORM\Entity(repositoryClass=PromoRepository::class)
@@ -158,6 +157,7 @@ class Promo
 
     /**
      * @ORM\OneToMany(targetEntity=BriefMaPromo::class, mappedBy="promo")
+     * @Groups({"promo:read","promo:read_All", "briefs"})
      */
     private $briefMaPromos;
 
@@ -171,7 +171,7 @@ class Promo
      */
     private $chats;
 
-    
+
 
     public function __construct()
     {
@@ -181,7 +181,6 @@ class Promo
         $this->briefMaPromos = new ArrayCollection();
         $this->competenceValides = new ArrayCollection();
         $this->chats = new ArrayCollection();
-        
     }
 
     public function getId(): ?int
@@ -460,6 +459,4 @@ class Promo
 
         return $this;
     }
-
-   
 }
