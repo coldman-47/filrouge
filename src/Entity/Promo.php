@@ -54,16 +54,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  *      },
  *      "put" = {
  *          "path" = "/admin/promos/{id}/"
-<<<<<<< HEAD
  *      },
  *      "form_promo_ref_comp" = {
  *          "method" = "get",
  *          "path" = "/formateurs/promo/{id}/referentiels/",
  *          "normalization_context"={"groups"={"promo:form"}}  
  *      },
-=======
- *      }
->>>>>>> c856b2ca45a8fd3ec6dc756f53dc107feb19368a
  *  }
  * )
  * @ORM\Entity(repositoryClass=PromoRepository::class)
