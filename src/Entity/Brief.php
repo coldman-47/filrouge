@@ -31,10 +31,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "method" = "get",
  *          "path" = "formateur/promo/{id}/briefs",
  *          "deserialize"=false
+ *      },
+ *      "addlivrablesByGroupeApprenant" = {
+ *          "method" = "post",
+ *          "path" = "/apprenants/{id}/groupe/{id2}/livrables",
+ *          "deserialize"=false
  *      }
  *  },
  * itemOperations = {
  *      "get",
+ *      "editBriefByPromo"={
+ *          "method" = "PUT",
+ *          "path"="/api/formateur/promo/{id1}/brief/{id2}",
+ *           "deserialize" = false
+ *      },
+ *      "getOnebriefByPromoApprenant"={
+ *          "method" = "GET",
+ *          "path"="apprenant/{id}/promo/{id2}/briefs/{id3}",
+ *          "deserialize" = false
+ *         
+ *      },
+ *      "assignationBrief"={
+ *          "method" = "PUT",
+ *          "security" = "is_granted('ROLE_ADMIN')",
+ *          "security_message" = "Accès refusé!",
+ *          "path"="/api/formateur/promo/{id}/brief/{id2}",
+ *          "deserialize" = false
+ *      },
+ *      "duplicateBrief" = {
+ *          "method" = "post",
+ *          "path" = "/formateur/briefs/{id}",
+ *          "deserialize"=false
+ *      }, 
  *  }
  * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)
