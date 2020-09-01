@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LivrablePartielRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiResource()
  * @ORM\Entity(repositoryClass=LivrablePartielRepository::class)
  */
 class LivrablePartiel
@@ -40,16 +42,6 @@ class LivrablePartiel
     private $type;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $nombreRendu;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $nombreCorrige;
-
-    /**
      * @ORM\ManyToOne(targetEntity=BriefMaPromo::class, inversedBy="livrablePartiels")
      */
     private $BriefMapromo;
@@ -63,6 +55,12 @@ class LivrablePartiel
      * @ORM\OneToMany(targetEntity=ApprenantLivrablePartiel::class, mappedBy="livrablePartiel")
      */
     private $apprenantLivrablePartiels;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $deleted;
+
 
 
     public function __construct()
@@ -124,30 +122,7 @@ class LivrablePartiel
         return $this;
     }
 
-    public function getNombreRendu(): ?int
-    {
-        return $this->nombreRendu;
-    }
-
-    public function setNombreRendu(int $nombreRendu): self
-    {
-        $this->nombreRendu = $nombreRendu;
-
-        return $this;
-    }
-
-    public function getNombreCorrige(): ?int
-    {
-        return $this->nombreCorrige;
-    }
-
-    public function setNombreCorrige(int $nombreCorrige): self
-    {
-        $this->nombreCorrige = $nombreCorrige;
-
-        return $this;
-    }
-
+    
     public function getBriefMapromo(): ?BriefMaPromo
     {
         return $this->BriefMapromo;
@@ -216,5 +191,19 @@ class LivrablePartiel
 
         return $this;
     }
+
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
+    }
+
+    public function setDeleted(?bool $deleted): self
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    
 
 }

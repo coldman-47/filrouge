@@ -7,12 +7,14 @@ use App\Repository\ReferentielRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
- * @ApiResource(
+ * 
  *  collectionOperations = {
  *      "getreferentiel" = {
+ *          "method" = "get",
  *          "path" = "/admin/referentiels/"
  *      },
  *      "addreferentiel" = {
@@ -59,11 +61,13 @@ class Referentiel
 
     /**
      * @ORM\ManyToMany(targetEntity=GroupeCompetence::class, inversedBy="referentiels")
+     * @Groups({"promo:form"})
      */
     private $grpCompetences;
 
     /**
      * @ORM\ManyToMany(targetEntity=Promo::class, mappedBy="referentil_promo")
+     * @Groups({"promo:form"})
      */
     private $promos;
 

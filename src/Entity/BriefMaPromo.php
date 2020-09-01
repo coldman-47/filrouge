@@ -16,7 +16,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @ORM\Entity(repositoryClass=BriefMaPromoRepository::class)
  * @Table(
  *  name = "brief_ma_promo",
- * uniqueConstraints = {
+ *  uniqueConstraints = {
  *         @UniqueConstraint(name = "promo_brief_idx", columns = {"promo_id","brief_id"}),
  * }
  * )
@@ -45,7 +45,7 @@ class BriefMaPromo
     private $promo;
 
     /**
-     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="briefmapromo")
+     * @ORM\OneToMany(targetEntity=BriefApprenant::class, mappedBy="briefMapromo")
      */
     private $briefApprenants;
 

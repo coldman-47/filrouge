@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Repository\CompetenceValideRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CompetenceValideRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CompetenceValideRepository::class)
@@ -35,6 +36,7 @@ class CompetenceValide
     /**
      * @ORM\ManyToOne(targetEntity=Competence::class, inversedBy="competenceValides")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"competence:read","grp"})
      */
     private $competence;
 

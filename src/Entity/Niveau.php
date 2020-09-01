@@ -2,13 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\NiveauRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\NiveauRepository;
+use Doctrine\Common\Collections\Collection;
+<<<<<<< HEAD
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
+=======
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+>>>>>>> c856b2ca45a8fd3ec6dc756f53dc107feb19368a
 
 /**
  * @ORM\Entity(repositoryClass=NiveauRepository::class)
+ * ApiResource()
  */
 class Niveau
 {
@@ -16,11 +23,13 @@ class Niveau
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"promo_cmpt"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"promo_cmpt"})
      */
     private $niveau;
 
@@ -55,7 +64,7 @@ class Niveau
         $this->livrablePartiels = new ArrayCollection();
     }
 
-    
+
 
     public function getId(): ?int
     {
@@ -165,5 +174,4 @@ class Niveau
 
         return $this;
     }
-   
 }

@@ -7,6 +7,7 @@ use App\Repository\CompetenceRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CompetenceRepository::class)
@@ -41,11 +42,14 @@ class Competence
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"promo_cmpt","competence:read","grp"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     *  @Groups({"promo_cmpt","competence:read","grp"})
+     * 
      */
     private $libelle;
 
@@ -61,11 +65,13 @@ class Competence
 
     /**
      * @ORM\OneToMany(targetEntity=Niveau::class, mappedBy="competence", cascade={"persist"})
+     * @Groups({"promo_cmpt","competence:read","grp"})
      */
     private $niveaux;
 
     /**
      * @ORM\OneToMany(targetEntity=CompetenceValide::class, mappedBy="competence")
+     *  @Groups({"promo_cmpt"})
      */
     private $competenceValides;
 

@@ -25,7 +25,7 @@ class BriefApprenant
     private $statut;
 
     /**
-     * @ORM\ManyToOne(targetEntity=BriefmaPromo::class, inversedBy="briefApprenants")
+     * @ORM\ManyToOne(targetEntity=BriefMaPromo::class, inversedBy="briefApprenants")
      * @ORM\JoinColumn(nullable=false)
      */
     private $briefmapromo;
