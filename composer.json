@@ -29,7 +29,10 @@
         "vich/uploader-bundle": "^1.15"
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "^3.3"
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
+        "symfony/browser-kit": "5.1.*",
+        "symfony/css-selector": "5.1.*",
+        "symfony/phpunit-bridge": "^5.1"
     },
     "config": {
         "optimize-autoloader": true,
