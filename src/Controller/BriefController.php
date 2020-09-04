@@ -88,7 +88,7 @@ class BriefController extends AbstractController
         $manager->flush();
         fclose($img);
 
-        return $this->json($Brief, 200);
+        // return $this->json($Brief, 200);
     }
 
     /**

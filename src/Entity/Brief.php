@@ -36,6 +36,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "method" = "post",
  *          "path" = "/apprenants/{id}/groupe/{id2}/livrables",
  *          "deserialize"=false
+ *      },
+ *      "duplicateBrief" = {
+ *          "method" = "post",
+ *          "path" = "/formateur/briefs/{id}",
+ *          "deserialize"=false
  *      }
  *  },
  * itemOperations = {
@@ -57,12 +62,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "security_message" = "Accès refusé!",
  *          "path"="/api/formateur/promo/{id}/brief/{id2}",
  *          "deserialize" = false
- *      },
- *      "duplicateBrief" = {
- *          "method" = "post",
- *          "path" = "/formateur/briefs/{id}",
- *          "deserialize"=false
- *      }, 
+ *      }
  *  }
  * )
  * @ORM\Entity(repositoryClass=BriefRepository::class)
