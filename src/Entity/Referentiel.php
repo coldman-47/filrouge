@@ -11,11 +11,11 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
- * 
+ * @ApiResource(
  *  collectionOperations = {
  *      "getreferentiel" = {
  *          "method" = "get",
- *          "path" = "/admin/referentiels/"
+ *          "path" = "/admin/referentiels/",
  *      },
  *      "addreferentiel" = {
  *          "method" = "post",
